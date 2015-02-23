@@ -1,0 +1,9 @@
+{
+  "name": "js-sha3",
+  "version": "0.1.0",
+  "main": ["build/sha3.min.js"],
+  "ignore": [
+    "samples",
+    "tests"
+  ]
+}
