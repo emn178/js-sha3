@@ -4,6 +4,12 @@
 [![NPM](https://nodei.co/npm/js-sha3.png?stars&downloads)](https://nodei.co/npm/js-sha3/)  
 A simple SHA-3 / Keccak hash function for JavaScript supports UTF-8 encoding.
 
+## Demo
+[SHA3-512 Online](http://emn178.github.io/online-tools/sha3_512.html)  
+[SHA3-384 Online](http://emn178.github.io/online-tools/sha3_384.html)  
+[SHA3-256 Online](http://emn178.github.io/online-tools/sha3_256.html)  
+[SHA3-224 Online](http://emn178.github.io/online-tools/sha3_224.html)  
+
 ## Download
 [Compress](https://raw.github.com/emn178/js-sha3/master/build/sha3.min.js)  
 [Uncompress](https://raw.github.com/emn178/js-sha3/master/src/sha3.js)
@@ -79,6 +85,10 @@ Output
     743f64bb7544c6ed923be4741b738dde18b7cee384a3a09c4e01acaaac9f19222cdee137702bd3aa05dc198373d87d6c
     70a2b6579047f0a977fcb5e9120a4e07067bea9abb6916fbc2d13ffb9a4e4eee
     f71837502ba8e10837bdd8d365adb85591895602fc552b48b7390abd
+
+## Benchmark
+[UTF8](http://jsperf.com/sha3/3)  
+[ASCII](http://jsperf.com/sha3/2)
 
 ## Extensions
 ### jQuery
