@@ -1,5 +1,5 @@
 /*
- * js-sha3 v0.1.1
+ * js-sha3 v0.1.2
  * https://github.com/emn178/js-sha3
  *
  * Copyright 2015, emn178@gmail.com
@@ -13,7 +13,11 @@
   var NODE_JS = typeof(module) != 'undefined';
   if(NODE_JS) {
     root = global;
+    if(root.JS_SHA3_TEST) {
+      root.navigator = { userAgent: 'Chrome'};
+    }
   }
+  var CHROME = (root.JS_SHA3_TEST || !NODE_JS) && navigator.userAgent.indexOf('Chrome') != -1;
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [1, 256, 65536, 16777216];
   var SHIFT = [0, 8, 16, 24];
@@ -275,76 +279,102 @@
     } while(!end);
 
     var hex = '';
-    hex += HEX_CHARS[(s[0] >> 4) & 0x0F] + HEX_CHARS[s[0] & 0x0F] +
-           HEX_CHARS[(s[0] >> 12) & 0x0F] + HEX_CHARS[(s[0] >> 8) & 0x0F] +
-           HEX_CHARS[(s[0] >> 20) & 0x0F] + HEX_CHARS[(s[0] >> 16) & 0x0F] +
-           HEX_CHARS[(s[0] >> 28) & 0x0F] + HEX_CHARS[(s[0] >> 24) & 0x0F] +
-           HEX_CHARS[(s[1] >> 4) & 0x0F] + HEX_CHARS[s[1] & 0x0F] +
-           HEX_CHARS[(s[1] >> 12) & 0x0F] + HEX_CHARS[(s[1] >> 8) & 0x0F] +
-           HEX_CHARS[(s[1] >> 20) & 0x0F] + HEX_CHARS[(s[1] >> 16) & 0x0F] +
-           HEX_CHARS[(s[1] >> 28) & 0x0F] + HEX_CHARS[(s[1] >> 24) & 0x0F] +
-           HEX_CHARS[(s[2] >> 4) & 0x0F] + HEX_CHARS[s[2] & 0x0F] +
-           HEX_CHARS[(s[2] >> 12) & 0x0F] + HEX_CHARS[(s[2] >> 8) & 0x0F] +
-           HEX_CHARS[(s[2] >> 20) & 0x0F] + HEX_CHARS[(s[2] >> 16) & 0x0F] +
-           HEX_CHARS[(s[2] >> 28) & 0x0F] + HEX_CHARS[(s[2] >> 24) & 0x0F] +
-           HEX_CHARS[(s[3] >> 4) & 0x0F] + HEX_CHARS[s[3] & 0x0F] +
-           HEX_CHARS[(s[3] >> 12) & 0x0F] + HEX_CHARS[(s[3] >> 8) & 0x0F] +
-           HEX_CHARS[(s[3] >> 20) & 0x0F] + HEX_CHARS[(s[3] >> 16) & 0x0F] +
-           HEX_CHARS[(s[3] >> 28) & 0x0F] + HEX_CHARS[(s[3] >> 24) & 0x0F] +
-           HEX_CHARS[(s[4] >> 4) & 0x0F] + HEX_CHARS[s[4] & 0x0F] +
-           HEX_CHARS[(s[4] >> 12) & 0x0F] + HEX_CHARS[(s[4] >> 8) & 0x0F] +
-           HEX_CHARS[(s[4] >> 20) & 0x0F] + HEX_CHARS[(s[4] >> 16) & 0x0F] +
-           HEX_CHARS[(s[4] >> 28) & 0x0F] + HEX_CHARS[(s[4] >> 24) & 0x0F] +
-           HEX_CHARS[(s[5] >> 4) & 0x0F] + HEX_CHARS[s[5] & 0x0F] +
-           HEX_CHARS[(s[5] >> 12) & 0x0F] + HEX_CHARS[(s[5] >> 8) & 0x0F] +
-           HEX_CHARS[(s[5] >> 20) & 0x0F] + HEX_CHARS[(s[5] >> 16) & 0x0F] +
-           HEX_CHARS[(s[5] >> 28) & 0x0F] + HEX_CHARS[(s[5] >> 24) & 0x0F] +
-           HEX_CHARS[(s[6] >> 4) & 0x0F] + HEX_CHARS[s[6] & 0x0F] +
-           HEX_CHARS[(s[6] >> 12) & 0x0F] + HEX_CHARS[(s[6] >> 8) & 0x0F] +
-           HEX_CHARS[(s[6] >> 20) & 0x0F] + HEX_CHARS[(s[6] >> 16) & 0x0F] +
-           HEX_CHARS[(s[6] >> 28) & 0x0F] + HEX_CHARS[(s[6] >> 24) & 0x0F];
+    if(CHROME) {
+      b0 = s[0];
+      b1 = s[1];
+      b2 = s[2];
+      b3 = s[3];
+      b4 = s[4];
+      b5 = s[5];
+      b6 = s[6];
+      b7 = s[7];
+      b8 = s[8];
+      b9 = s[9];
+      b10 = s[10];
+      b11 = s[11];
+      b12 = s[12];
+      b13 = s[13];
+      b14 = s[14];
+      b15 = s[15];
+      hex += HEX_CHARS[(b0 >> 4) & 0x0F] + HEX_CHARS[b0 & 0x0F] +
+             HEX_CHARS[(b0 >> 12) & 0x0F] + HEX_CHARS[(b0 >> 8) & 0x0F] +
+             HEX_CHARS[(b0 >> 20) & 0x0F] + HEX_CHARS[(b0 >> 16) & 0x0F] +
+             HEX_CHARS[(b0 >> 28) & 0x0F] + HEX_CHARS[(b0 >> 24) & 0x0F] +
+             HEX_CHARS[(b1 >> 4) & 0x0F] + HEX_CHARS[b1 & 0x0F] +
+             HEX_CHARS[(b1 >> 12) & 0x0F] + HEX_CHARS[(b1 >> 8) & 0x0F] +
+             HEX_CHARS[(b1 >> 20) & 0x0F] + HEX_CHARS[(b1 >> 16) & 0x0F] +
+             HEX_CHARS[(b1 >> 28) & 0x0F] + HEX_CHARS[(b1 >> 24) & 0x0F] +
+             HEX_CHARS[(b2 >> 4) & 0x0F] + HEX_CHARS[b2 & 0x0F] +
+             HEX_CHARS[(b2 >> 12) & 0x0F] + HEX_CHARS[(b2 >> 8) & 0x0F] +
+             HEX_CHARS[(b2 >> 20) & 0x0F] + HEX_CHARS[(b2 >> 16) & 0x0F] +
+             HEX_CHARS[(b2 >> 28) & 0x0F] + HEX_CHARS[(b2 >> 24) & 0x0F] +
+             HEX_CHARS[(b3 >> 4) & 0x0F] + HEX_CHARS[b3 & 0x0F] +
+             HEX_CHARS[(b3 >> 12) & 0x0F] + HEX_CHARS[(b3 >> 8) & 0x0F] +
+             HEX_CHARS[(b3 >> 20) & 0x0F] + HEX_CHARS[(b3 >> 16) & 0x0F] +
+             HEX_CHARS[(b3 >> 28) & 0x0F] + HEX_CHARS[(b3 >> 24) & 0x0F] +
+             HEX_CHARS[(b4 >> 4) & 0x0F] + HEX_CHARS[b4 & 0x0F] +
+             HEX_CHARS[(b4 >> 12) & 0x0F] + HEX_CHARS[(b4 >> 8) & 0x0F] +
+             HEX_CHARS[(b4 >> 20) & 0x0F] + HEX_CHARS[(b4 >> 16) & 0x0F] +
+             HEX_CHARS[(b4 >> 28) & 0x0F] + HEX_CHARS[(b4 >> 24) & 0x0F] +
+             HEX_CHARS[(b5 >> 4) & 0x0F] + HEX_CHARS[b5 & 0x0F] +
+             HEX_CHARS[(b5 >> 12) & 0x0F] + HEX_CHARS[(b5 >> 8) & 0x0F] +
+             HEX_CHARS[(b5 >> 20) & 0x0F] + HEX_CHARS[(b5 >> 16) & 0x0F] +
+             HEX_CHARS[(b5 >> 28) & 0x0F] + HEX_CHARS[(b5 >> 24) & 0x0F] +
+             HEX_CHARS[(b6 >> 4) & 0x0F] + HEX_CHARS[b6 & 0x0F] +
+             HEX_CHARS[(b6 >> 12) & 0x0F] + HEX_CHARS[(b6 >> 8) & 0x0F] +
+             HEX_CHARS[(b6 >> 20) & 0x0F] + HEX_CHARS[(b6 >> 16) & 0x0F] +
+             HEX_CHARS[(b6 >> 28) & 0x0F] + HEX_CHARS[(b6 >> 24) & 0x0F];
 
-    if(bits >= 256) {
-      hex += HEX_CHARS[(s[7] >> 4) & 0x0F] + HEX_CHARS[s[7] & 0x0F] +
-             HEX_CHARS[(s[7] >> 12) & 0x0F] + HEX_CHARS[(s[7] >> 8) & 0x0F] +
-             HEX_CHARS[(s[7] >> 20) & 0x0F] + HEX_CHARS[(s[7] >> 16) & 0x0F] +
-             HEX_CHARS[(s[7] >> 28) & 0x0F] + HEX_CHARS[(s[7] >> 24) & 0x0F];
-    }
-    if(bits >= 384) {
-      hex += HEX_CHARS[(s[8] >> 4) & 0x0F] + HEX_CHARS[s[8] & 0x0F] +
-             HEX_CHARS[(s[8] >> 12) & 0x0F] + HEX_CHARS[(s[8] >> 8) & 0x0F] +
-             HEX_CHARS[(s[8] >> 20) & 0x0F] + HEX_CHARS[(s[8] >> 16) & 0x0F] +
-             HEX_CHARS[(s[8] >> 28) & 0x0F] + HEX_CHARS[(s[8] >> 24) & 0x0F] +
-             HEX_CHARS[(s[9] >> 4) & 0x0F] + HEX_CHARS[s[9] & 0x0F] +
-             HEX_CHARS[(s[9] >> 12) & 0x0F] + HEX_CHARS[(s[9] >> 8) & 0x0F] +
-             HEX_CHARS[(s[9] >> 20) & 0x0F] + HEX_CHARS[(s[9] >> 16) & 0x0F] +
-             HEX_CHARS[(s[9] >> 28) & 0x0F] + HEX_CHARS[(s[9] >> 24) & 0x0F] +
-             HEX_CHARS[(s[10] >> 4) & 0x0F] + HEX_CHARS[s[10] & 0x0F] +
-             HEX_CHARS[(s[10] >> 12) & 0x0F] + HEX_CHARS[(s[10] >> 8) & 0x0F] +
-             HEX_CHARS[(s[10] >> 20) & 0x0F] + HEX_CHARS[(s[10] >> 16) & 0x0F] +
-             HEX_CHARS[(s[10] >> 28) & 0x0F] + HEX_CHARS[(s[10] >> 24) & 0x0F] +
-             HEX_CHARS[(s[11] >> 4) & 0x0F] + HEX_CHARS[s[11] & 0x0F] +
-             HEX_CHARS[(s[11] >> 12) & 0x0F] + HEX_CHARS[(s[11] >> 8) & 0x0F] +
-             HEX_CHARS[(s[11] >> 20) & 0x0F] + HEX_CHARS[(s[11] >> 16) & 0x0F] +
-             HEX_CHARS[(s[11] >> 28) & 0x0F] + HEX_CHARS[(s[11] >> 24) & 0x0F];
-    }
-    if(bits == 512) {
-      hex += HEX_CHARS[(s[12] >> 4) & 0x0F] + HEX_CHARS[s[12] & 0x0F] +
-             HEX_CHARS[(s[12] >> 12) & 0x0F] + HEX_CHARS[(s[12] >> 8) & 0x0F] +
-             HEX_CHARS[(s[12] >> 20) & 0x0F] + HEX_CHARS[(s[12] >> 16) & 0x0F] +
-             HEX_CHARS[(s[12] >> 28) & 0x0F] + HEX_CHARS[(s[12] >> 24) & 0x0F] +
-             HEX_CHARS[(s[13] >> 4) & 0x0F] + HEX_CHARS[s[13] & 0x0F] +
-             HEX_CHARS[(s[13] >> 12) & 0x0F] + HEX_CHARS[(s[13] >> 8) & 0x0F] +
-             HEX_CHARS[(s[13] >> 20) & 0x0F] + HEX_CHARS[(s[13] >> 16) & 0x0F] +
-             HEX_CHARS[(s[13] >> 28) & 0x0F] + HEX_CHARS[(s[13] >> 24) & 0x0F] +
-             HEX_CHARS[(s[14] >> 4) & 0x0F] + HEX_CHARS[s[14] & 0x0F] +
-             HEX_CHARS[(s[14] >> 12) & 0x0F] + HEX_CHARS[(s[14] >> 8) & 0x0F] +
-             HEX_CHARS[(s[14] >> 20) & 0x0F] + HEX_CHARS[(s[14] >> 16) & 0x0F] +
-             HEX_CHARS[(s[14] >> 28) & 0x0F] + HEX_CHARS[(s[14] >> 24) & 0x0F] +
-             HEX_CHARS[(s[15] >> 4) & 0x0F] + HEX_CHARS[s[15] & 0x0F] +
-             HEX_CHARS[(s[15] >> 12) & 0x0F] + HEX_CHARS[(s[15] >> 8) & 0x0F] +
-             HEX_CHARS[(s[15] >> 20) & 0x0F] + HEX_CHARS[(s[15] >> 16) & 0x0F] +
-             HEX_CHARS[(s[15] >> 28) & 0x0F] + HEX_CHARS[(s[15] >> 24) & 0x0F];
+      if(bits >= 256) {
+        hex += HEX_CHARS[(b7 >> 4) & 0x0F] + HEX_CHARS[b7 & 0x0F] +
+               HEX_CHARS[(b7 >> 12) & 0x0F] + HEX_CHARS[(b7 >> 8) & 0x0F] +
+               HEX_CHARS[(b7 >> 20) & 0x0F] + HEX_CHARS[(b7 >> 16) & 0x0F] +
+               HEX_CHARS[(b7 >> 28) & 0x0F] + HEX_CHARS[(b7 >> 24) & 0x0F];
+      }
+      if(bits >= 384) {
+        hex += HEX_CHARS[(b8 >> 4) & 0x0F] + HEX_CHARS[b8 & 0x0F] +
+               HEX_CHARS[(b8 >> 12) & 0x0F] + HEX_CHARS[(b8 >> 8) & 0x0F] +
+               HEX_CHARS[(b8 >> 20) & 0x0F] + HEX_CHARS[(b8 >> 16) & 0x0F] +
+               HEX_CHARS[(b8 >> 28) & 0x0F] + HEX_CHARS[(b8 >> 24) & 0x0F] +
+               HEX_CHARS[(b9 >> 4) & 0x0F] + HEX_CHARS[b9 & 0x0F] +
+               HEX_CHARS[(b9 >> 12) & 0x0F] + HEX_CHARS[(b9 >> 8) & 0x0F] +
+               HEX_CHARS[(b9 >> 20) & 0x0F] + HEX_CHARS[(b9 >> 16) & 0x0F] +
+               HEX_CHARS[(b9 >> 28) & 0x0F] + HEX_CHARS[(b9 >> 24) & 0x0F] +
+               HEX_CHARS[(b10 >> 4) & 0x0F] + HEX_CHARS[b10 & 0x0F] +
+               HEX_CHARS[(b10 >> 12) & 0x0F] + HEX_CHARS[(b10 >> 8) & 0x0F] +
+               HEX_CHARS[(b10 >> 20) & 0x0F] + HEX_CHARS[(b10 >> 16) & 0x0F] +
+               HEX_CHARS[(b10 >> 28) & 0x0F] + HEX_CHARS[(b10 >> 24) & 0x0F] +
+               HEX_CHARS[(b11 >> 4) & 0x0F] + HEX_CHARS[b11 & 0x0F] +
+               HEX_CHARS[(b11 >> 12) & 0x0F] + HEX_CHARS[(b11 >> 8) & 0x0F] +
+               HEX_CHARS[(b11 >> 20) & 0x0F] + HEX_CHARS[(b11 >> 16) & 0x0F] +
+               HEX_CHARS[(b11 >> 28) & 0x0F] + HEX_CHARS[(b11 >> 24) & 0x0F];
+      }
+      if(bits == 512) {
+        hex += HEX_CHARS[(b12 >> 4) & 0x0F] + HEX_CHARS[b12 & 0x0F] +
+               HEX_CHARS[(b12 >> 12) & 0x0F] + HEX_CHARS[(b12 >> 8) & 0x0F] +
+               HEX_CHARS[(b12 >> 20) & 0x0F] + HEX_CHARS[(b12 >> 16) & 0x0F] +
+               HEX_CHARS[(b12 >> 28) & 0x0F] + HEX_CHARS[(b12 >> 24) & 0x0F] +
+               HEX_CHARS[(b13 >> 4) & 0x0F] + HEX_CHARS[b13 & 0x0F] +
+               HEX_CHARS[(b13 >> 12) & 0x0F] + HEX_CHARS[(b13 >> 8) & 0x0F] +
+               HEX_CHARS[(b13 >> 20) & 0x0F] + HEX_CHARS[(b13 >> 16) & 0x0F] +
+               HEX_CHARS[(b13 >> 28) & 0x0F] + HEX_CHARS[(b13 >> 24) & 0x0F] +
+               HEX_CHARS[(b14 >> 4) & 0x0F] + HEX_CHARS[b14 & 0x0F] +
+               HEX_CHARS[(b14 >> 12) & 0x0F] + HEX_CHARS[(b14 >> 8) & 0x0F] +
+               HEX_CHARS[(b14 >> 20) & 0x0F] + HEX_CHARS[(b14 >> 16) & 0x0F] +
+               HEX_CHARS[(b14 >> 28) & 0x0F] + HEX_CHARS[(b14 >> 24) & 0x0F] +
+               HEX_CHARS[(b15 >> 4) & 0x0F] + HEX_CHARS[b15 & 0x0F] +
+               HEX_CHARS[(b15 >> 12) & 0x0F] + HEX_CHARS[(b15 >> 8) & 0x0F] +
+               HEX_CHARS[(b15 >> 20) & 0x0F] + HEX_CHARS[(b15 >> 16) & 0x0F] +
+               HEX_CHARS[(b15 >> 28) & 0x0F] + HEX_CHARS[(b15 >> 24) & 0x0F];
+      }
+    } else {
+      for(i = 0, n = bits / 32;i < n;++i) {
+        h = s[i];
+        hex += HEX_CHARS[(h >> 4) & 0x0F] + HEX_CHARS[h & 0x0F] +
+               HEX_CHARS[(h >> 12) & 0x0F] + HEX_CHARS[(h >> 8) & 0x0F] +
+               HEX_CHARS[(h >> 20) & 0x0F] + HEX_CHARS[(h >> 16) & 0x0F] +
+               HEX_CHARS[(h >> 28) & 0x0F] + HEX_CHARS[(h >> 24) & 0x0F];
+      }
     }
     return hex;
   };
