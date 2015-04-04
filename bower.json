@@ -1,9 +1,9 @@
 {
   "name": "js-sha3",
-  "version": "0.1.2",
-  "main": ["build/sha3.min.js"],
+  "version": "0.2.0",
+  "main": ["src/sha3.js"],
   "ignore": [
     "samples",
-    "test"
+    "tests"
   ]
 }

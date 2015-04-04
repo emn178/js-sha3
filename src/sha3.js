@@ -1,5 +1,5 @@
 /*
- * js-sha3 v0.1.2
+ * js-sha3 v0.2.0
  * https://github.com/emn178/js-sha3
  *
  * Copyright 2015, emn178@gmail.com
@@ -19,7 +19,8 @@
   }
   var CHROME = (root.JS_SHA3_TEST || !NODE_JS) && navigator.userAgent.indexOf('Chrome') != -1;
   var HEX_CHARS = '0123456789abcdef'.split('');
-  var EXTRA = [1, 256, 65536, 16777216];
+  var KECCAK_PADDING = [1, 256, 65536, 16777216];
+  var PADDING = [6, 1536, 393216, 100663296];
   var SHIFT = [0, 8, 16, 24];
   var RC = [1, 0, 32898, 0, 32906, 2147483648, 2147516416, 2147483648, 32907, 0, 2147483649,
             0, 2147516545, 2147483648, 32777, 2147483648, 138, 0, 136, 0, 2147516425, 0, 
@@ -29,21 +30,38 @@
 
   var blocks = [], s = [];
 
+  var keccak_224 = function(message) {
+    return keccak(message, 224, KECCAK_PADDING);
+  };
+
+  var keccak_256 = function(message) {
+    return keccak(message, 256, KECCAK_PADDING);
+  };
+
+  var keccak_384 = function(message) {
+    return keccak(message, 384, KECCAK_PADDING);
+  };
+
   var sha3_224 = function(message) {
-    return sha3(message, 224);
+    return keccak(message, 224, PADDING);
   };
 
   var sha3_256 = function(message) {
-    return sha3(message, 256);
+    return keccak(message, 256, PADDING);
   };
 
   var sha3_384 = function(message) {
-    return sha3(message, 384);
+    return keccak(message, 384, PADDING);
   };
 
-  var sha3 = function(message, bits) {
+  var sha3_512 = function(message) {
+    return keccak(message, 512, PADDING);
+  };
+
+  var keccak = function(message, bits, padding) {
     if(bits === undefined) {
       bits = 512;
+      padding = KECCAK_PADDING;
     }
 
     var block, code, end = false, index = 0, start = 0, length = message.length,
@@ -85,7 +103,7 @@
       }
       start = i - byteCount;
       if(index == length) {
-        blocks[i >> 2] |= EXTRA[i & 3];
+        blocks[i >> 2] |= padding[i & 3];
         ++index;
       }
       block = blocks[blockCount];
@@ -381,15 +399,23 @@
   
   if(!root.JS_SHA3_TEST && NODE_JS) {
     module.exports = {
-      sha3_512: sha3,
+      sha3_512: sha3_512,
       sha3_384: sha3_384,
       sha3_256: sha3_256,
-      sha3_224: sha3_224
+      sha3_224: sha3_224,
+      keccak_512: keccak,
+      keccak_384: keccak_384,
+      keccak_256: keccak_256,
+      keccak_224: keccak_224
     };
   } else if(root) {
-    root.sha3_512 = sha3;
+    root.sha3_512 = sha3_512;
     root.sha3_384 = sha3_384;
     root.sha3_256 = sha3_256;
     root.sha3_224 = sha3_224;
+    root.keccak_512 = keccak;
+    root.keccak_384 = keccak_384;
+    root.keccak_256 = keccak_256;
+    root.keccak_224 = keccak_224;
   }
 }(this));
