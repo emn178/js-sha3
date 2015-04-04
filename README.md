@@ -154,8 +154,8 @@ keccak_224('中文');
 // f71837502ba8e10837bdd8d365adb85591895602fc552b48b7390abd
 ```
 ## Benchmark
-[UTF8](http://jsperf.com/sha3/3)  
-[ASCII](http://jsperf.com/sha3/2)
+[UTF8](http://jsperf.com/sha3/5)  
+[ASCII](http://jsperf.com/sha3/4)
 
 ## Extensions
 ### jQuery
