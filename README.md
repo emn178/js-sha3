@@ -12,6 +12,10 @@ Sha3 methods has been renamed to keccak since v0.2.0. It means that sha3 methods
 [SHA3-384 Online](http://emn178.github.io/online-tools/sha3_384.html)  
 [SHA3-256 Online](http://emn178.github.io/online-tools/sha3_256.html)  
 [SHA3-224 Online](http://emn178.github.io/online-tools/sha3_224.html)  
+[Keccak-512 Online](http://emn178.github.io/online-tools/keccak_512.html)  
+[Keccak-384 Online](http://emn178.github.io/online-tools/keccak_384.html)  
+[Keccak-256 Online](http://emn178.github.io/online-tools/keccak_256.html)  
+[Keccak-224 Online](http://emn178.github.io/online-tools/keccak_224.html)  
 
 ## Download
 [Compress](https://raw.github.com/emn178/js-sha3/master/build/sha3.min.js)  
