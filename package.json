@@ -1,6 +1,6 @@
 {
   "name": "js-sha3",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A simple SHA-3 / Keccak hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha3.js",
   "devDependencies": {

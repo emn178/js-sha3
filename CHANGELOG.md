@@ -1,3 +1,7 @@
+# v0.3.0 / 2015-05-21
+
+* Support byte array and ArrayBuffer input.
+
 # v0.2.0 / 2015-04-04
 
 * Implement NIST's May 2014 SHA-3 version.
