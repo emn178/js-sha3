@@ -1,5 +1,5 @@
 /*
- * js-sha3 v0.3.0
+ * js-sha3 v0.3.1
  * https://github.com/emn178/js-sha3
  *
  * Copyright 2015, emn178@gmail.com
@@ -60,7 +60,7 @@
 
   var keccak = function(message, bits, padding) {
     var notString = typeof(message) != 'string';
-    if(notString && message.constructor == ArrayBuffer) {
+    if(notString && message.constructor == root.ArrayBuffer) {
       message = new Uint8Array(message);
     }
 
@@ -88,7 +88,7 @@
         blocks[i] = 0;
       }
       if(notString) {
-        for (i = start;index < length && i < 64; ++index) {
+        for (i = start;index < length && i < byteCount; ++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       } else {
