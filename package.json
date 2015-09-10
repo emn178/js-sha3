@@ -4,8 +4,11 @@
   "description": "A simple SHA-3 / Keccak hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha3.js",
   "devDependencies": {
+    "coveralls": "~2.11.4",
     "expect.js": "~0.3.1",
-    "jscoverage": "~0.5.9"
+    "jscoverage": "~0.5.9",
+    "mocha": "~2.3.2",
+    "mocha-lcov-reporter": "0.0.2"
   },
   "scripts": {
     "test": "mocha tests/node-test.js -r jscoverage",
