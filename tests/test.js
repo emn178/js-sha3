@@ -1,3 +1,12 @@
+ArrayBuffer.prototype.toHexString = function (argument) {
+  var array = new Uint8Array(this);
+  var hex = '';
+  for(var i = 0;i < array.length;++i) {
+    var c = array[i].toString('16');
+    hex += c.length == 1 ? '0' + c : c;
+  }
+  return hex;
+};
 (function(sha3_512, sha3_384, sha3_256, sha3_224) {
   describe('sha3_512', function() {
     context('when ascii', function() {
@@ -57,6 +66,12 @@
     context('when ArrayBuffer', function() {
       it('should be equal', function() {
         expect(sha3_512(new ArrayBuffer(0))).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
+      });
+    });
+
+    context('when output ArrayBuffer', function() {
+      it('should be equal', function() {
+        expect(sha3_512.buffer('').toHexString()).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
       });
     });
   });

@@ -1,5 +1,5 @@
 /*
- * js-sha3 v0.3.1
+ * js-sha3 v0.4.0
  * https://github.com/emn178/js-sha3
  *
  * Copyright 2015, emn178@gmail.com
@@ -27,46 +27,39 @@
             2147483658, 0, 2147516555, 0, 139, 2147483648, 32905, 2147483648, 32771, 
             2147483648, 32770, 2147483648, 128, 2147483648, 32778, 0, 2147483658, 2147483648,
             2147516545, 2147483648, 32896, 2147483648, 2147483649, 0, 2147516424, 2147483648];
+  var BITS = [224, 256, 384, 512];
+  var ALGORITHMS = [
+    {name: 'keccak', padding: KECCAK_PADDING},
+    {name: 'sha3', padding: PADDING}
+  ];
+  var OUTPUT_TYPES = ['hex', 'buffer'];
 
-  var blocks = [], s = [];
+  var blocks = [], s = [], methods = {};
 
-  var keccak_224 = function(message) {
-    return keccak(message, 224, KECCAK_PADDING);
+  var createMethod = function(bits, padding, outputType) {
+    return function(message) {
+      return keccak(message, bits, padding, outputType);
+    }
   };
 
-  var keccak_256 = function(message) {
-    return keccak(message, 256, KECCAK_PADDING);
-  };
+  for(var i = 0;i < ALGORITHMS.length;++i) {
+    var algorithm = ALGORITHMS[i];
+    for(var j = 0;j < BITS.length;++j) {
+      (function(algorithm, bits) {
+        var method = createMethod(bits, algorithm.padding, 'hex');
+        methods[algorithm.name +'_' + bits] = method;
+        for(var k = 0;k < OUTPUT_TYPES.length;++k) {
+          var type = OUTPUT_TYPES[k];
+          method[type] = createMethod(bits, algorithm.padding, type);
+        }
+      })(algorithm, BITS[j]);
+    }
+  }
 
-  var keccak_384 = function(message) {
-    return keccak(message, 384, KECCAK_PADDING);
-  };
-
-  var sha3_224 = function(message) {
-    return keccak(message, 224, PADDING);
-  };
-
-  var sha3_256 = function(message) {
-    return keccak(message, 256, PADDING);
-  };
-
-  var sha3_384 = function(message) {
-    return keccak(message, 384, PADDING);
-  };
-
-  var sha3_512 = function(message) {
-    return keccak(message, 512, PADDING);
-  };
-
-  var keccak = function(message, bits, padding) {
+  var keccak = function(message, bits, padding, outputType) {
     var notString = typeof(message) != 'string';
     if(notString && message.constructor == root.ArrayBuffer) {
       message = new Uint8Array(message);
-    }
-
-    if(bits === undefined) {
-      bits = 512;
-      padding = KECCAK_PADDING;
     }
 
     var block, code, end = false, index = 0, start = 0, length = message.length,
@@ -307,126 +300,122 @@
       }
     } while(!end);
 
-    var hex = '';
-    if(CHROME) {
-      b0 = s[0];
-      b1 = s[1];
-      b2 = s[2];
-      b3 = s[3];
-      b4 = s[4];
-      b5 = s[5];
-      b6 = s[6];
-      b7 = s[7];
-      b8 = s[8];
-      b9 = s[9];
-      b10 = s[10];
-      b11 = s[11];
-      b12 = s[12];
-      b13 = s[13];
-      b14 = s[14];
-      b15 = s[15];
-      hex += HEX_CHARS[(b0 >> 4) & 0x0F] + HEX_CHARS[b0 & 0x0F] +
-             HEX_CHARS[(b0 >> 12) & 0x0F] + HEX_CHARS[(b0 >> 8) & 0x0F] +
-             HEX_CHARS[(b0 >> 20) & 0x0F] + HEX_CHARS[(b0 >> 16) & 0x0F] +
-             HEX_CHARS[(b0 >> 28) & 0x0F] + HEX_CHARS[(b0 >> 24) & 0x0F] +
-             HEX_CHARS[(b1 >> 4) & 0x0F] + HEX_CHARS[b1 & 0x0F] +
-             HEX_CHARS[(b1 >> 12) & 0x0F] + HEX_CHARS[(b1 >> 8) & 0x0F] +
-             HEX_CHARS[(b1 >> 20) & 0x0F] + HEX_CHARS[(b1 >> 16) & 0x0F] +
-             HEX_CHARS[(b1 >> 28) & 0x0F] + HEX_CHARS[(b1 >> 24) & 0x0F] +
-             HEX_CHARS[(b2 >> 4) & 0x0F] + HEX_CHARS[b2 & 0x0F] +
-             HEX_CHARS[(b2 >> 12) & 0x0F] + HEX_CHARS[(b2 >> 8) & 0x0F] +
-             HEX_CHARS[(b2 >> 20) & 0x0F] + HEX_CHARS[(b2 >> 16) & 0x0F] +
-             HEX_CHARS[(b2 >> 28) & 0x0F] + HEX_CHARS[(b2 >> 24) & 0x0F] +
-             HEX_CHARS[(b3 >> 4) & 0x0F] + HEX_CHARS[b3 & 0x0F] +
-             HEX_CHARS[(b3 >> 12) & 0x0F] + HEX_CHARS[(b3 >> 8) & 0x0F] +
-             HEX_CHARS[(b3 >> 20) & 0x0F] + HEX_CHARS[(b3 >> 16) & 0x0F] +
-             HEX_CHARS[(b3 >> 28) & 0x0F] + HEX_CHARS[(b3 >> 24) & 0x0F] +
-             HEX_CHARS[(b4 >> 4) & 0x0F] + HEX_CHARS[b4 & 0x0F] +
-             HEX_CHARS[(b4 >> 12) & 0x0F] + HEX_CHARS[(b4 >> 8) & 0x0F] +
-             HEX_CHARS[(b4 >> 20) & 0x0F] + HEX_CHARS[(b4 >> 16) & 0x0F] +
-             HEX_CHARS[(b4 >> 28) & 0x0F] + HEX_CHARS[(b4 >> 24) & 0x0F] +
-             HEX_CHARS[(b5 >> 4) & 0x0F] + HEX_CHARS[b5 & 0x0F] +
-             HEX_CHARS[(b5 >> 12) & 0x0F] + HEX_CHARS[(b5 >> 8) & 0x0F] +
-             HEX_CHARS[(b5 >> 20) & 0x0F] + HEX_CHARS[(b5 >> 16) & 0x0F] +
-             HEX_CHARS[(b5 >> 28) & 0x0F] + HEX_CHARS[(b5 >> 24) & 0x0F] +
-             HEX_CHARS[(b6 >> 4) & 0x0F] + HEX_CHARS[b6 & 0x0F] +
-             HEX_CHARS[(b6 >> 12) & 0x0F] + HEX_CHARS[(b6 >> 8) & 0x0F] +
-             HEX_CHARS[(b6 >> 20) & 0x0F] + HEX_CHARS[(b6 >> 16) & 0x0F] +
-             HEX_CHARS[(b6 >> 28) & 0x0F] + HEX_CHARS[(b6 >> 24) & 0x0F];
-
-      if(bits >= 256) {
-        hex += HEX_CHARS[(b7 >> 4) & 0x0F] + HEX_CHARS[b7 & 0x0F] +
-               HEX_CHARS[(b7 >> 12) & 0x0F] + HEX_CHARS[(b7 >> 8) & 0x0F] +
-               HEX_CHARS[(b7 >> 20) & 0x0F] + HEX_CHARS[(b7 >> 16) & 0x0F] +
-               HEX_CHARS[(b7 >> 28) & 0x0F] + HEX_CHARS[(b7 >> 24) & 0x0F];
+    if(outputType == 'buffer') {
+      var length = bits / 32;
+      var buffer = new ArrayBuffer(bits / 8);
+      var array = new Uint32Array(buffer);
+      for(var i = 0;i < length;++i) {
+        array[i] = s[i];
       }
-      if(bits >= 384) {
-        hex += HEX_CHARS[(b8 >> 4) & 0x0F] + HEX_CHARS[b8 & 0x0F] +
-               HEX_CHARS[(b8 >> 12) & 0x0F] + HEX_CHARS[(b8 >> 8) & 0x0F] +
-               HEX_CHARS[(b8 >> 20) & 0x0F] + HEX_CHARS[(b8 >> 16) & 0x0F] +
-               HEX_CHARS[(b8 >> 28) & 0x0F] + HEX_CHARS[(b8 >> 24) & 0x0F] +
-               HEX_CHARS[(b9 >> 4) & 0x0F] + HEX_CHARS[b9 & 0x0F] +
-               HEX_CHARS[(b9 >> 12) & 0x0F] + HEX_CHARS[(b9 >> 8) & 0x0F] +
-               HEX_CHARS[(b9 >> 20) & 0x0F] + HEX_CHARS[(b9 >> 16) & 0x0F] +
-               HEX_CHARS[(b9 >> 28) & 0x0F] + HEX_CHARS[(b9 >> 24) & 0x0F] +
-               HEX_CHARS[(b10 >> 4) & 0x0F] + HEX_CHARS[b10 & 0x0F] +
-               HEX_CHARS[(b10 >> 12) & 0x0F] + HEX_CHARS[(b10 >> 8) & 0x0F] +
-               HEX_CHARS[(b10 >> 20) & 0x0F] + HEX_CHARS[(b10 >> 16) & 0x0F] +
-               HEX_CHARS[(b10 >> 28) & 0x0F] + HEX_CHARS[(b10 >> 24) & 0x0F] +
-               HEX_CHARS[(b11 >> 4) & 0x0F] + HEX_CHARS[b11 & 0x0F] +
-               HEX_CHARS[(b11 >> 12) & 0x0F] + HEX_CHARS[(b11 >> 8) & 0x0F] +
-               HEX_CHARS[(b11 >> 20) & 0x0F] + HEX_CHARS[(b11 >> 16) & 0x0F] +
-               HEX_CHARS[(b11 >> 28) & 0x0F] + HEX_CHARS[(b11 >> 24) & 0x0F];
-      }
-      if(bits == 512) {
-        hex += HEX_CHARS[(b12 >> 4) & 0x0F] + HEX_CHARS[b12 & 0x0F] +
-               HEX_CHARS[(b12 >> 12) & 0x0F] + HEX_CHARS[(b12 >> 8) & 0x0F] +
-               HEX_CHARS[(b12 >> 20) & 0x0F] + HEX_CHARS[(b12 >> 16) & 0x0F] +
-               HEX_CHARS[(b12 >> 28) & 0x0F] + HEX_CHARS[(b12 >> 24) & 0x0F] +
-               HEX_CHARS[(b13 >> 4) & 0x0F] + HEX_CHARS[b13 & 0x0F] +
-               HEX_CHARS[(b13 >> 12) & 0x0F] + HEX_CHARS[(b13 >> 8) & 0x0F] +
-               HEX_CHARS[(b13 >> 20) & 0x0F] + HEX_CHARS[(b13 >> 16) & 0x0F] +
-               HEX_CHARS[(b13 >> 28) & 0x0F] + HEX_CHARS[(b13 >> 24) & 0x0F] +
-               HEX_CHARS[(b14 >> 4) & 0x0F] + HEX_CHARS[b14 & 0x0F] +
-               HEX_CHARS[(b14 >> 12) & 0x0F] + HEX_CHARS[(b14 >> 8) & 0x0F] +
-               HEX_CHARS[(b14 >> 20) & 0x0F] + HEX_CHARS[(b14 >> 16) & 0x0F] +
-               HEX_CHARS[(b14 >> 28) & 0x0F] + HEX_CHARS[(b14 >> 24) & 0x0F] +
-               HEX_CHARS[(b15 >> 4) & 0x0F] + HEX_CHARS[b15 & 0x0F] +
-               HEX_CHARS[(b15 >> 12) & 0x0F] + HEX_CHARS[(b15 >> 8) & 0x0F] +
-               HEX_CHARS[(b15 >> 20) & 0x0F] + HEX_CHARS[(b15 >> 16) & 0x0F] +
-               HEX_CHARS[(b15 >> 28) & 0x0F] + HEX_CHARS[(b15 >> 24) & 0x0F];
-      }
+      return buffer;
     } else {
-      for(i = 0, n = bits / 32;i < n;++i) {
-        h = s[i];
-        hex += HEX_CHARS[(h >> 4) & 0x0F] + HEX_CHARS[h & 0x0F] +
-               HEX_CHARS[(h >> 12) & 0x0F] + HEX_CHARS[(h >> 8) & 0x0F] +
-               HEX_CHARS[(h >> 20) & 0x0F] + HEX_CHARS[(h >> 16) & 0x0F] +
-               HEX_CHARS[(h >> 28) & 0x0F] + HEX_CHARS[(h >> 24) & 0x0F];
+      var hex = '';
+      if(CHROME) {
+        b0 = s[0];
+        b1 = s[1];
+        b2 = s[2];
+        b3 = s[3];
+        b4 = s[4];
+        b5 = s[5];
+        b6 = s[6];
+        b7 = s[7];
+        b8 = s[8];
+        b9 = s[9];
+        b10 = s[10];
+        b11 = s[11];
+        b12 = s[12];
+        b13 = s[13];
+        b14 = s[14];
+        b15 = s[15];
+        hex += HEX_CHARS[(b0 >> 4) & 0x0F] + HEX_CHARS[b0 & 0x0F] +
+               HEX_CHARS[(b0 >> 12) & 0x0F] + HEX_CHARS[(b0 >> 8) & 0x0F] +
+               HEX_CHARS[(b0 >> 20) & 0x0F] + HEX_CHARS[(b0 >> 16) & 0x0F] +
+               HEX_CHARS[(b0 >> 28) & 0x0F] + HEX_CHARS[(b0 >> 24) & 0x0F] +
+               HEX_CHARS[(b1 >> 4) & 0x0F] + HEX_CHARS[b1 & 0x0F] +
+               HEX_CHARS[(b1 >> 12) & 0x0F] + HEX_CHARS[(b1 >> 8) & 0x0F] +
+               HEX_CHARS[(b1 >> 20) & 0x0F] + HEX_CHARS[(b1 >> 16) & 0x0F] +
+               HEX_CHARS[(b1 >> 28) & 0x0F] + HEX_CHARS[(b1 >> 24) & 0x0F] +
+               HEX_CHARS[(b2 >> 4) & 0x0F] + HEX_CHARS[b2 & 0x0F] +
+               HEX_CHARS[(b2 >> 12) & 0x0F] + HEX_CHARS[(b2 >> 8) & 0x0F] +
+               HEX_CHARS[(b2 >> 20) & 0x0F] + HEX_CHARS[(b2 >> 16) & 0x0F] +
+               HEX_CHARS[(b2 >> 28) & 0x0F] + HEX_CHARS[(b2 >> 24) & 0x0F] +
+               HEX_CHARS[(b3 >> 4) & 0x0F] + HEX_CHARS[b3 & 0x0F] +
+               HEX_CHARS[(b3 >> 12) & 0x0F] + HEX_CHARS[(b3 >> 8) & 0x0F] +
+               HEX_CHARS[(b3 >> 20) & 0x0F] + HEX_CHARS[(b3 >> 16) & 0x0F] +
+               HEX_CHARS[(b3 >> 28) & 0x0F] + HEX_CHARS[(b3 >> 24) & 0x0F] +
+               HEX_CHARS[(b4 >> 4) & 0x0F] + HEX_CHARS[b4 & 0x0F] +
+               HEX_CHARS[(b4 >> 12) & 0x0F] + HEX_CHARS[(b4 >> 8) & 0x0F] +
+               HEX_CHARS[(b4 >> 20) & 0x0F] + HEX_CHARS[(b4 >> 16) & 0x0F] +
+               HEX_CHARS[(b4 >> 28) & 0x0F] + HEX_CHARS[(b4 >> 24) & 0x0F] +
+               HEX_CHARS[(b5 >> 4) & 0x0F] + HEX_CHARS[b5 & 0x0F] +
+               HEX_CHARS[(b5 >> 12) & 0x0F] + HEX_CHARS[(b5 >> 8) & 0x0F] +
+               HEX_CHARS[(b5 >> 20) & 0x0F] + HEX_CHARS[(b5 >> 16) & 0x0F] +
+               HEX_CHARS[(b5 >> 28) & 0x0F] + HEX_CHARS[(b5 >> 24) & 0x0F] +
+               HEX_CHARS[(b6 >> 4) & 0x0F] + HEX_CHARS[b6 & 0x0F] +
+               HEX_CHARS[(b6 >> 12) & 0x0F] + HEX_CHARS[(b6 >> 8) & 0x0F] +
+               HEX_CHARS[(b6 >> 20) & 0x0F] + HEX_CHARS[(b6 >> 16) & 0x0F] +
+               HEX_CHARS[(b6 >> 28) & 0x0F] + HEX_CHARS[(b6 >> 24) & 0x0F];
+
+        if(bits >= 256) {
+          hex += HEX_CHARS[(b7 >> 4) & 0x0F] + HEX_CHARS[b7 & 0x0F] +
+                 HEX_CHARS[(b7 >> 12) & 0x0F] + HEX_CHARS[(b7 >> 8) & 0x0F] +
+                 HEX_CHARS[(b7 >> 20) & 0x0F] + HEX_CHARS[(b7 >> 16) & 0x0F] +
+                 HEX_CHARS[(b7 >> 28) & 0x0F] + HEX_CHARS[(b7 >> 24) & 0x0F];
+        }
+        if(bits >= 384) {
+          hex += HEX_CHARS[(b8 >> 4) & 0x0F] + HEX_CHARS[b8 & 0x0F] +
+                 HEX_CHARS[(b8 >> 12) & 0x0F] + HEX_CHARS[(b8 >> 8) & 0x0F] +
+                 HEX_CHARS[(b8 >> 20) & 0x0F] + HEX_CHARS[(b8 >> 16) & 0x0F] +
+                 HEX_CHARS[(b8 >> 28) & 0x0F] + HEX_CHARS[(b8 >> 24) & 0x0F] +
+                 HEX_CHARS[(b9 >> 4) & 0x0F] + HEX_CHARS[b9 & 0x0F] +
+                 HEX_CHARS[(b9 >> 12) & 0x0F] + HEX_CHARS[(b9 >> 8) & 0x0F] +
+                 HEX_CHARS[(b9 >> 20) & 0x0F] + HEX_CHARS[(b9 >> 16) & 0x0F] +
+                 HEX_CHARS[(b9 >> 28) & 0x0F] + HEX_CHARS[(b9 >> 24) & 0x0F] +
+                 HEX_CHARS[(b10 >> 4) & 0x0F] + HEX_CHARS[b10 & 0x0F] +
+                 HEX_CHARS[(b10 >> 12) & 0x0F] + HEX_CHARS[(b10 >> 8) & 0x0F] +
+                 HEX_CHARS[(b10 >> 20) & 0x0F] + HEX_CHARS[(b10 >> 16) & 0x0F] +
+                 HEX_CHARS[(b10 >> 28) & 0x0F] + HEX_CHARS[(b10 >> 24) & 0x0F] +
+                 HEX_CHARS[(b11 >> 4) & 0x0F] + HEX_CHARS[b11 & 0x0F] +
+                 HEX_CHARS[(b11 >> 12) & 0x0F] + HEX_CHARS[(b11 >> 8) & 0x0F] +
+                 HEX_CHARS[(b11 >> 20) & 0x0F] + HEX_CHARS[(b11 >> 16) & 0x0F] +
+                 HEX_CHARS[(b11 >> 28) & 0x0F] + HEX_CHARS[(b11 >> 24) & 0x0F];
+        }
+        if(bits == 512) {
+          hex += HEX_CHARS[(b12 >> 4) & 0x0F] + HEX_CHARS[b12 & 0x0F] +
+                 HEX_CHARS[(b12 >> 12) & 0x0F] + HEX_CHARS[(b12 >> 8) & 0x0F] +
+                 HEX_CHARS[(b12 >> 20) & 0x0F] + HEX_CHARS[(b12 >> 16) & 0x0F] +
+                 HEX_CHARS[(b12 >> 28) & 0x0F] + HEX_CHARS[(b12 >> 24) & 0x0F] +
+                 HEX_CHARS[(b13 >> 4) & 0x0F] + HEX_CHARS[b13 & 0x0F] +
+                 HEX_CHARS[(b13 >> 12) & 0x0F] + HEX_CHARS[(b13 >> 8) & 0x0F] +
+                 HEX_CHARS[(b13 >> 20) & 0x0F] + HEX_CHARS[(b13 >> 16) & 0x0F] +
+                 HEX_CHARS[(b13 >> 28) & 0x0F] + HEX_CHARS[(b13 >> 24) & 0x0F] +
+                 HEX_CHARS[(b14 >> 4) & 0x0F] + HEX_CHARS[b14 & 0x0F] +
+                 HEX_CHARS[(b14 >> 12) & 0x0F] + HEX_CHARS[(b14 >> 8) & 0x0F] +
+                 HEX_CHARS[(b14 >> 20) & 0x0F] + HEX_CHARS[(b14 >> 16) & 0x0F] +
+                 HEX_CHARS[(b14 >> 28) & 0x0F] + HEX_CHARS[(b14 >> 24) & 0x0F] +
+                 HEX_CHARS[(b15 >> 4) & 0x0F] + HEX_CHARS[b15 & 0x0F] +
+                 HEX_CHARS[(b15 >> 12) & 0x0F] + HEX_CHARS[(b15 >> 8) & 0x0F] +
+                 HEX_CHARS[(b15 >> 20) & 0x0F] + HEX_CHARS[(b15 >> 16) & 0x0F] +
+                 HEX_CHARS[(b15 >> 28) & 0x0F] + HEX_CHARS[(b15 >> 24) & 0x0F];
+        }
+      } else {
+        for(i = 0, n = bits / 32;i < n;++i) {
+          h = s[i];
+          hex += HEX_CHARS[(h >> 4) & 0x0F] + HEX_CHARS[h & 0x0F] +
+                 HEX_CHARS[(h >> 12) & 0x0F] + HEX_CHARS[(h >> 8) & 0x0F] +
+                 HEX_CHARS[(h >> 20) & 0x0F] + HEX_CHARS[(h >> 16) & 0x0F] +
+                 HEX_CHARS[(h >> 28) & 0x0F] + HEX_CHARS[(h >> 24) & 0x0F];
+        }
       }
+      return hex;
     }
-    return hex;
   };
   
   if(!root.JS_SHA3_TEST && NODE_JS) {
-    module.exports = {
-      sha3_512: sha3_512,
-      sha3_384: sha3_384,
-      sha3_256: sha3_256,
-      sha3_224: sha3_224,
-      keccak_512: keccak,
-      keccak_384: keccak_384,
-      keccak_256: keccak_256,
-      keccak_224: keccak_224
-    };
+    module.exports = methods;
   } else if(root) {
-    root.sha3_512 = sha3_512;
-    root.sha3_384 = sha3_384;
-    root.sha3_256 = sha3_256;
-    root.sha3_224 = sha3_224;
-    root.keccak_512 = keccak;
-    root.keccak_384 = keccak_384;
-    root.keccak_256 = keccak_256;
-    root.keccak_224 = keccak_224;
+    for(var key in methods) {
+      root[key] = methods[key];
+    }
   }
 }(this));

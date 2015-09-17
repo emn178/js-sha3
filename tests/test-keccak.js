@@ -59,6 +59,12 @@
         expect(keccak_512(new ArrayBuffer(0))).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
       });
     });
+
+    context('when output ArrayBuffer', function() {
+      it('should be equal', function() {
+        expect(keccak_512.buffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+      });
+    });
   });
 
   describe('keccak_384', function() {
