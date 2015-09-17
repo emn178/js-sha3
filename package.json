@@ -1,11 +1,12 @@
 {
   "name": "js-sha3",
-  "version": "0.3.1",
-  "description": "A simple SHA-3 / Keccak hash function for JavaScript supports UTF-8 encoding.",
+  "version": "0.4.0",
+  "description": "A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha3.js",
   "devDependencies": {
     "expect.js": "~0.3.1",
-    "jscoverage": "~0.5.9"
+    "jscoverage": "~0.5.9",
+    "mocha": "~2.3.2"
   },
   "scripts": {
     "test": "mocha tests/node-test.js -r jscoverage",

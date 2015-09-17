@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/emn178/js-sha3.svg?branch=master)](https://travis-ci.org/emn178/js-sha3)
 [![Coverage Status](https://coveralls.io/repos/emn178/js-sha3/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha3?branch=master)  
 [![NPM](https://nodei.co/npm/js-sha3.png?stars&downloads)](https://nodei.co/npm/js-sha3/)  
-A simple SHA-3 / Keccak hash function for JavaScript supports UTF-8 encoding.
+A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.
 
 ## Notice
 Sha3 methods has been renamed to keccak since v0.2.0. It means that sha3 methods of v0.1.x are equal to keccak methods of v0.2.x and later.
@@ -41,6 +41,11 @@ keccak_512('Message to hash');
 keccak_384('Message to hash');
 keccak_256('Message to hash');
 keccak_224('Message to hash');
+shake_128('Message to hash', 256);
+shake_256('Message to hash', 512);
+
+// Support ArrayBuffer output
+var buffer = keccak_224.buffer('Message to hash');
 ```
 If you use node.js, you should require the module first:
 ```JavaScript
@@ -52,6 +57,8 @@ keccak_512 = require('js-sha3').keccak_512;
 keccak_384 = require('js-sha3').keccak_384;
 keccak_256 = require('js-sha3').keccak_256;
 keccak_224 = require('js-sha3').keccak_224;
+shake_128 = require('js-sha3').shake_128;
+shake_256 = require('js-sha3').shake_256;
 ```
 
 ## Example
@@ -128,6 +135,12 @@ keccak_224('The quick brown fox jumps over the lazy dog');
 
 keccak_224('The quick brown fox jumps over the lazy dog.');
 // c59d4eaeac728671c635ff645014e2afa935bebffdb5fbd207ffdeab
+
+shake_128('', 256);
+// 7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26
+
+shake_256('', 512);
+// 46b9dd2b0ba88d13233b3feb743eeb243fcd52ea62b81b82b50c27646ed5762fd75dc4ddd8c0f200cb05019d67b592f6fc821c49479ab48640292eacb3b7c4be
 ```
 It also supports UTF-8 encoding:
 

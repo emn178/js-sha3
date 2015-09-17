@@ -1,3 +1,8 @@
+# v0.4.0 / 2015-09-17
+
+* Support to output ArrayBuffer.
+* Add shake alogirthms.
+
 # v0.3.1 / 2015-05-22
 
 * Fixed bugs.
