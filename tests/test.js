@@ -1,5 +1,5 @@
 (function(sha3_512, sha3_384, sha3_256, sha3_224) {
-  ArrayBuffer.prototype.toHexString = function (argument) {
+  Array.prototype.toHexString = ArrayBuffer.prototype.toHexString = function() {
     var array = new Uint8Array(this);
     var hex = '';
     for(var i = 0;i < array.length;++i) {

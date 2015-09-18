@@ -45,6 +45,9 @@ shake_256('Message to hash', 512);
 
 // Support ArrayBuffer output
 var buffer = keccak_224.buffer('Message to hash');
+
+// Support Array output
+var buffer = keccak_224.array('Message to hash');
 ```
 If you use node.js, you should require the module first:
 ```JavaScript

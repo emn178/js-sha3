@@ -1,3 +1,8 @@
+# v0.4.1 / 2015-09-18
+
+* Support to output Integer Array.
+* Fixed shake output incorrect when it's greater than 1088.
+
 # v0.4.0 / 2015-09-17
 
 * Support to output ArrayBuffer.
