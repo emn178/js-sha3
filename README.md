@@ -48,6 +48,23 @@ var buffer = keccak_224.buffer('Message to hash');
 
 // Support Array output
 var buffer = keccak_224.array('Message to hash');
+
+// update hash
+sha3_512.update('Message ').update('to ').update('hash').hex();
+// specify shake output bits at first update
+shake_128.update('Message ', 256).update('to ').update('hash').hex();
+
+// or to use create
+var hash = sha3_512.create();
+hash.update('...');
+hash.update('...');
+hash.hex();
+
+// specify shake output bits when creating
+var hash = shake_128.create(256);
+hash.update('...');
+hash.update('...');
+hash.hex();
 ```
 If you use node.js, you should require the module first:
 ```JavaScript

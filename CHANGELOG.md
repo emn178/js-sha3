@@ -1,3 +1,7 @@
+# v0.5.0 / 2015-09-23
+
+* Support update interface.
+
 # v0.4.1 / 2015-09-18
 
 * Support to output Integer Array.

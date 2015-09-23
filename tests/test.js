@@ -77,7 +77,25 @@
 
     context('#hex', function() {
       it('should be equal', function() {
-        expect(sha3_512.hex('')).to.be(sha3_512(''));
+        expect(sha3_512.hex('')).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
+      });
+    });
+
+    context('#update', function() {
+      it('should be equal', function() {
+        expect(sha3_512.update('').hex()).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
+        expect(sha3_512.update('The quick brown fox ').update('jumps over the lazy dog').hex()).to.be('01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450');
+      });
+    });
+
+    context('#create', function() {
+      it('should be equal', function() {
+        var bytes = [84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103];
+        var hash = sha3_512.create();
+        for(var i = 0;i < bytes.length;++i) {
+          hash.update([bytes[i]]);
+        }
+        expect(hash.hex()).to.be('01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450');
       });
     });
   });
