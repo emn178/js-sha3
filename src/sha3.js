@@ -104,7 +104,7 @@
     this.outputBlocks = outputBits >> 5;
     this.extraBytes = (outputBits & 31) >> 3;
 
-    for(i = 0;i < 50;++i) {
+    for(var i = 0;i < 50;++i) {
       this.s[i] = 0;
     }
   };
