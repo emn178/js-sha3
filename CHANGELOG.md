@@ -1,3 +1,7 @@
+# v0.5.1 / 2015-10-27
+
+* Update package.json and bower.json.
+
 # v0.5.0 / 2015-09-23
 
 * Support update interface.

@@ -1,5 +1,5 @@
 /*
- * js-sha3 v0.5.0
+ * js-sha3 v0.5.1
  * https://github.com/emn178/js-sha3
  *
  * Copyright 2015, emn178@gmail.com
