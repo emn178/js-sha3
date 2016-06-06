@@ -1,3 +1,7 @@
+# v0.5.2 / 2016-06-06
+
+* Fixed shake output incorrect in the special length.
+
 # v0.5.1 / 2015-10-27
 
 * Update package.json and bower.json.

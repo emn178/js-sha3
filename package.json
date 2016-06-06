@@ -1,6 +1,6 @@
 {
   "name": "js-sha3",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha3.js",
   "devDependencies": {
@@ -19,13 +19,14 @@
   "keywords": [
     "sha3",
     "keccak",
+    "shake",
     "hash",
     "encryption",
     "cryptography",
     "HMAC"
   ],
   "license": "MIT",
-  "author": "emn178 <emn178@gmail.com>",
+  "author": "Chen, Yi-Cyuan <emn178@gmail.com>",
   "homepage": "https://github.com/emn178/js-sha3",
   "bugs": {
     "url": "https://github.com/emn178/js-sha3/issues"

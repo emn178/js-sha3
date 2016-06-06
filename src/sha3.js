@@ -1,21 +1,17 @@
-/*
- * js-sha3 v0.5.1
- * https://github.com/emn178/js-sha3
+/**
+ * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * Copyright 2015, emn178@gmail.com
- *
- * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * @version 0.5.2
+ * @author Chen, Yi-Cyuan [emn178@gmail.com]
+ * @copyright Chen, Yi-Cyuan 2015-2016
+ * @license MIT
  */
-;(function(root, undefined) {
+(function (root) {
   'use strict';
 
   var NODE_JS = typeof(module) != 'undefined';
-  if(NODE_JS) {
+  if (NODE_JS) {
     root = global;
-    if(root.JS_SHA3_TEST) {
-      root.navigator = { userAgent: 'Chrome'};
-    }
   }
   var HEX_CHARS = '0123456789abcdef'.split('');
   var SHAKE_PADDING = [31, 7936, 2031616, 520093696];
@@ -31,42 +27,42 @@
   var SHAKE_BITS = [128, 256];
   var OUTPUT_TYPES = ['hex', 'buffer', 'array'];
 
-  var createOutputMethod = function(bits, padding, outputType) {
-    return function(message) {
+  var createOutputMethod = function (bits, padding, outputType) {
+    return function (message) {
       return new Keccak(bits, padding, bits).update(message)[outputType]();
     }
   };
 
-  var createShakeOutputMethod = function(bits, padding, outputType) {
-    return function(message, outputBits) {
+  var createShakeOutputMethod = function (bits, padding, outputType) {
+    return function (message, outputBits) {
       return new Keccak(bits, padding, outputBits).update(message)[outputType]();
     }
   };
 
-  var createMethod = function(bits, padding) {
+  var createMethod = function (bits, padding) {
     var method = createOutputMethod(bits, padding, 'hex');
-    method.create = function() {
+    method.create = function () {
       return new Keccak(bits, padding, bits);
     };
-    method.update = function(message) {
+    method.update = function (message) {
       return method.create().update(message);
     };
-    for(var i = 0;i < OUTPUT_TYPES.length;++i) {
+    for (var i = 0;i < OUTPUT_TYPES.length;++i) {
       var type = OUTPUT_TYPES[i];
       method[type] = createOutputMethod(bits, padding, type);
     }
     return method;
   };
 
-  var createShakeMethod = function(bits, padding) {
+  var createShakeMethod = function (bits, padding) {
     var method = createShakeOutputMethod(bits, padding, 'hex');
-    method.create = function(outputBits) {
+    method.create = function (outputBits) {
       return new Keccak(bits, padding, outputBits);
     };
-    method.update = function(message, outputBits) {
+    method.update = function (message, outputBits) {
       return method.create(outputBits).update(message);
     };
-    for(var i = 0;i < OUTPUT_TYPES.length;++i) {
+    for (var i = 0;i < OUTPUT_TYPES.length;++i) {
       var type = OUTPUT_TYPES[i];
       method[type] = createShakeOutputMethod(bits, padding, type);
     }
@@ -81,11 +77,11 @@
 
   var methods = {};
 
-  for(var i = 0;i < algorithms.length;++i) {
+  for (var i = 0;i < algorithms.length;++i) {
     var algorithm = algorithms[i];
     var bits  = algorithm.bits;
     var createMethod = algorithm.createMethod;
-    for(var j = 0;j < bits.length;++j) {
+    for (var j = 0;j < bits.length;++j) {
       var method = algorithm.createMethod(bits[j], algorithm.padding);
       methods[algorithm.name +'_' + bits[j]] = method;
     }
@@ -104,28 +100,28 @@
     this.outputBlocks = outputBits >> 5;
     this.extraBytes = (outputBits & 31) >> 3;
 
-    for(var i = 0;i < 50;++i) {
+    for (var i = 0;i < 50;++i) {
       this.s[i] = 0;
     }
   };
 
-  Keccak.prototype.update = function(message) {
+  Keccak.prototype.update = function (message) {
     var notString = typeof(message) != 'string';
-    if(notString && message.constructor == root.ArrayBuffer) {
+    if (notString && message.constructor == root.ArrayBuffer) {
       message = new Uint8Array(message);
     }
     var length = message.length, blocks = this.blocks, byteCount = this.byteCount, 
         blockCount = this.blockCount, index = 0, s = this.s, i, code;
     
-    while(index < length) {
-      if(this.reset) {
+    while (index < length) {
+      if (this.reset) {
         this.reset = false;
         blocks[0] = this.block;
-        for(i = 1;i < blockCount + 1;++i) {
+        for (i = 1;i < blockCount + 1;++i) {
           blocks[i] = 0;
         }
       }
-      if(notString) {
+      if (notString) {
         for (i = this.start;index < length && i < byteCount; ++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
@@ -151,10 +147,10 @@
         }
       }
       this.lastByteIndex = i;
-      if(i >= byteCount) {
+      if (i >= byteCount) {
         this.start = i - byteCount;
         this.block = blocks[blockCount];
-        for(i = 0;i < blockCount;++i) {
+        for (i = 0;i < blockCount;++i) {
           s[i] ^= blocks[i];
         }
         f(s);
@@ -166,91 +162,92 @@
     return this;
   };
 
-  Keccak.prototype.finalize = function() {
+  Keccak.prototype.finalize = function () {
     var blocks = this.blocks, i = this.lastByteIndex, blockCount = this.blockCount, s = this.s;
     blocks[i >> 2] |= this.padding[i & 3];
-    if(this.lastByteIndex == this.byteCount) {
+    if (this.lastByteIndex == this.byteCount) {
       blocks[0] = blocks[blockCount];
-      for(i = 1;i < blockCount + 1;++i) {
+      for (i = 1;i < blockCount + 1;++i) {
         blocks[i] = 0;
       }
     }
     blocks[blockCount - 1] |= 0x80000000;
-    for(i = 0;i < blockCount;++i) {
+    for (i = 0;i < blockCount;++i) {
       s[i] ^= blocks[i];
     }
     f(s);
   };
 
-  Keccak.prototype.toString = Keccak.prototype.hex = function() {
+  Keccak.prototype.toString = Keccak.prototype.hex = function () {
     this.finalize();
 
     var blockCount = this.blockCount, s = this.s, outputBlocks = this.outputBlocks, 
         extraBytes = this.extraBytes, i = 0, j = 0;
     var hex = '', block;
-    while(j < outputBlocks) {
-      for(i = 0;i < blockCount && j < outputBlocks;++i, ++j) {
+    while (j < outputBlocks) {
+      for (i = 0;i < blockCount && j < outputBlocks;++i, ++j) {
         block = s[i];
         hex += HEX_CHARS[(block >> 4) & 0x0F] + HEX_CHARS[block & 0x0F] +
                HEX_CHARS[(block >> 12) & 0x0F] + HEX_CHARS[(block >> 8) & 0x0F] +
                HEX_CHARS[(block >> 20) & 0x0F] + HEX_CHARS[(block >> 16) & 0x0F] +
                HEX_CHARS[(block >> 28) & 0x0F] + HEX_CHARS[(block >> 24) & 0x0F];
       }
-      if(j % blockCount == 0) {
+      if (j % blockCount == 0) {
         f(s);
+        i = 0;
       }
     }
-    if(extraBytes) {
+    if (extraBytes) {
       block = s[i];
-      if(extraBytes > 0) {
+      if (extraBytes > 0) {
         hex += HEX_CHARS[(block >> 4) & 0x0F] + HEX_CHARS[block & 0x0F];
       }
-      if(extraBytes > 1) {
+      if (extraBytes > 1) {
         hex += HEX_CHARS[(block >> 12) & 0x0F] + HEX_CHARS[(block >> 8) & 0x0F];
       }
-      if(extraBytes > 2) {
+      if (extraBytes > 2) {
         hex += HEX_CHARS[(block >> 20) & 0x0F] + HEX_CHARS[(block >> 16) & 0x0F];
       }
     }
     return hex;
   };
 
-  Keccak.prototype.buffer = function() {
+  Keccak.prototype.buffer = function () {
     this.finalize();
 
     var blockCount = this.blockCount, s = this.s, outputBlocks = this.outputBlocks, 
         extraBytes = this.extraBytes, i = 0, j = 0;
     var bytes = this.outputBits >> 3;
     var buffer;
-    if(extraBytes) {
+    if (extraBytes) {
       buffer = new ArrayBuffer((outputBlocks + 1) << 2);
     } else {
       buffer = new ArrayBuffer(bytes);
     }
     var array = new Uint32Array(buffer);
-    while(j < outputBlocks) {
-      for(i = 0;i < blockCount && j < outputBlocks;++i, ++j) {
+    while (j < outputBlocks) {
+      for (i = 0;i < blockCount && j < outputBlocks;++i, ++j) {
         array[j] = s[i];
       }
-      if(j % blockCount == 0) {
+      if (j % blockCount == 0) {
         f(s);
       }
     }
-    if(extraBytes) {
+    if (extraBytes) {
       array[i] = s[i];
       buffer = buffer.slice(0, bytes);
     }
     return buffer;
   };
 
-  Keccak.prototype.digest = Keccak.prototype.array = function() {
+  Keccak.prototype.digest = Keccak.prototype.array = function () {
     this.finalize();
 
     var blockCount = this.blockCount, s = this.s, outputBlocks = this.outputBlocks, 
         extraBytes = this.extraBytes, i = 0, j = 0;
     var array = [], offset, block;
-    while(j < outputBlocks) {
-      for(i = 0;i < blockCount && j < outputBlocks;++i, ++j) {
+    while (j < outputBlocks) {
+      for (i = 0;i < blockCount && j < outputBlocks;++i, ++j) {
         offset = j << 2;
         block = s[i];
         array[offset] = block & 0xFF;
@@ -258,32 +255,32 @@
         array[offset + 2] = (block >> 16) & 0xFF;
         array[offset + 3] = (block >> 24) & 0xFF;
       }
-      if(j % blockCount == 0) {
+      if (j % blockCount == 0) {
         f(s);
       }
     }
-    if(extraBytes) {
+    if (extraBytes) {
       offset = j << 2;
       block = s[i];
-      if(extraBytes > 0) {
+      if (extraBytes > 0) {
         array[offset] = block & 0xFF;
       }
-      if(extraBytes > 1) {
+      if (extraBytes > 1) {
         array[offset + 1] = (block >> 8) & 0xFF;
       }
-      if(extraBytes > 2) {
+      if (extraBytes > 2) {
         array[offset + 2] = (block >> 16) & 0xFF;
       }
     }
     return array;
   };
 
-  var f = function(s) {
+  var f = function (s) {
     var h, l, n, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, 
         b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, 
         b18, b19, b20, b21, b22, b23, b24, b25, b26, b27, b28, b29, b30, b31, b32, b33, 
         b34, b35, b36, b37, b38, b39, b40, b41, b42, b43, b44, b45, b46, b47, b48, b49;
-    for(n = 0; n < 48; n += 2) {
+    for (n = 0; n < 48; n += 2) {
       c0 = s[0] ^ s[10] ^ s[20] ^ s[30] ^ s[40];
       c1 = s[1] ^ s[11] ^ s[21] ^ s[31] ^ s[41];
       c2 = s[2] ^ s[12] ^ s[22] ^ s[32] ^ s[42];
@@ -463,10 +460,10 @@
     }
   }
 
-  if(!root.JS_SHA3_TEST && NODE_JS) {
+  if (!root.JS_SHA3_TEST && NODE_JS) {
     module.exports = methods;
-  } else if(root) {
-    for(var key in methods) {
+  } else if (root) {
+    for (var key in methods) {
       root[key] = methods[key];
     }
   }

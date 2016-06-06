@@ -281,4 +281,4 @@ The project is released under the [MIT license](http://www.opensource.org/licens
 
 ## Contact
 The project's website is located at https://github.com/emn178/js-sha3  
-Author: emn178@gmail.com
+Author: Chen, Yi-Cyuan (emn178@gmail.com)
