@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.5.2
+ * @version 0.5.3
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2016
  * @license MIT
@@ -9,7 +9,7 @@
 (function (root) {
   'use strict';
 
-  var NODE_JS = typeof(module) != 'undefined';
+  var NODE_JS = typeof process == 'object' && process.versions && process.versions.node;
   if (NODE_JS) {
     root = global;
   }
@@ -106,7 +106,7 @@
   };
 
   Keccak.prototype.update = function (message) {
-    var notString = typeof(message) != 'string';
+    var notString = typeof message != 'string';
     if (notString && message.constructor == root.ArrayBuffer) {
       message = new Uint8Array(message);
     }
@@ -122,11 +122,11 @@
         }
       }
       if (notString) {
-        for (i = this.start;index < length && i < byteCount; ++index) {
+        for (i = this.start;index < length && i < byteCount;++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       } else {
-        for (i = this.start;index < length && i < byteCount; ++index) {
+        for (i = this.start;index < length && i < byteCount;++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
             blocks[i >> 2] |= code << SHIFT[i++ & 3];
@@ -280,7 +280,7 @@
         b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, 
         b18, b19, b20, b21, b22, b23, b24, b25, b26, b27, b28, b29, b30, b31, b32, b33, 
         b34, b35, b36, b37, b38, b39, b40, b41, b42, b43, b44, b45, b46, b47, b48, b49;
-    for (n = 0; n < 48; n += 2) {
+    for (n = 0;n < 48;n += 2) {
       c0 = s[0] ^ s[10] ^ s[20] ^ s[30] ^ s[40];
       c1 = s[1] ^ s[11] ^ s[21] ^ s[31] ^ s[41];
       c2 = s[2] ^ s[12] ^ s[22] ^ s[32] ^ s[42];

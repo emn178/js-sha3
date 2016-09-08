@@ -1,3 +1,7 @@
+# v0.5.3 / 2016-09-08
+
+* Added some files to npm package.
+
 # v0.5.2 / 2016-06-06
 
 * Fixed shake output incorrect in the special length.
