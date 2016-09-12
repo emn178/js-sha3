@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.5.3
+ * @version 0.5.4
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2016
  * @license MIT
@@ -13,6 +13,7 @@
   if (NODE_JS) {
     root = global;
   }
+  var COMMON_JS = !root.JS_SHA3_TEST && typeof module == 'object' && module.exports;
   var HEX_CHARS = '0123456789abcdef'.split('');
   var SHAKE_PADDING = [31, 7936, 2031616, 520093696];
   var KECCAK_PADDING = [1, 256, 65536, 16777216];
@@ -460,7 +461,7 @@
     }
   }
 
-  if (!root.JS_SHA3_TEST && NODE_JS) {
+  if (COMMON_JS) {
     module.exports = methods;
   } else if (root) {
     for (var key in methods) {

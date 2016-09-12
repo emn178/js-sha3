@@ -1,3 +1,7 @@
+# v0.5.4 / 2016-09-12
+
+* Added CommonJS detection.
+
 # v0.5.3 / 2016-09-08
 
 * Added some files to npm package.
