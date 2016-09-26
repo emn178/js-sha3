@@ -1,12 +1,14 @@
 # js-sha3
 
 [![Build Status](https://travis-ci.org/emn178/js-sha3.svg?branch=master)](https://travis-ci.org/emn178/js-sha3)
-[![Coverage Status](https://coveralls.io/repos/emn178/js-sha3/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha3?branch=master)
+[![Coverage Status](https://coveralls.io/repos/emn178/js-sha3/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha3?branch=master)  
+[![NPM](https://nodei.co/npm/js-sha3.png?stars&downloads)](https://nodei.co/npm/js-sha3/)
 
 A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.
 
 ## Notice
-Sha3 methods has been renamed to keccak since v0.2.0. It means that sha3 methods of v0.1.x are equal to keccak methods of v0.2.x and later.
+* Sha3 methods has been renamed to keccak since v0.2.0. It means that sha3 methods of v0.1.x are equal to keccak methods of v0.2.x and later.
+* `buffer` method is deprecated. This maybe confuse with Buffer in node.js. Please use `arrayBuffer` instead.
 
 ## Demo
 [SHA3-512 Online](http://emn178.github.io/online-tools/sha3_512.html)  
@@ -17,6 +19,8 @@ Sha3 methods has been renamed to keccak since v0.2.0. It means that sha3 methods
 [Keccak-384 Online](http://emn178.github.io/online-tools/keccak_384.html)  
 [Keccak-256 Online](http://emn178.github.io/online-tools/keccak_256.html)  
 [Keccak-224 Online](http://emn178.github.io/online-tools/keccak_224.html)  
+[Shake-128 Online](http://emn178.github.io/online-tools/shake_128.html)  
+[Shake-256 Online](http://emn178.github.io/online-tools/shake_256.html)  
 
 ## Download
 [Compress](https://raw.github.com/emn178/js-sha3/master/build/sha3.min.js)  

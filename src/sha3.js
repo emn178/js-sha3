@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.5.4
+ * @version 0.5.5
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2016
  * @license MIT
@@ -26,7 +26,7 @@
             2147516545, 2147483648, 32896, 2147483648, 2147483649, 0, 2147516424, 2147483648];
   var BITS = [224, 256, 384, 512];
   var SHAKE_BITS = [128, 256];
-  var OUTPUT_TYPES = ['hex', 'buffer', 'array'];
+  var OUTPUT_TYPES = ['hex', 'buffer', 'arrayBuffer', 'array'];
 
   var createOutputMethod = function (bits, padding, outputType) {
     return function (message) {
@@ -81,10 +81,8 @@
   for (var i = 0;i < algorithms.length;++i) {
     var algorithm = algorithms[i];
     var bits  = algorithm.bits;
-    var createMethod = algorithm.createMethod;
     for (var j = 0;j < bits.length;++j) {
-      var method = algorithm.createMethod(bits[j], algorithm.padding);
-      methods[algorithm.name +'_' + bits[j]] = method;
+      methods[algorithm.name +'_' + bits[j]] = algorithm.createMethod(bits[j], algorithm.padding);
     }
   }
 
@@ -213,7 +211,7 @@
     return hex;
   };
 
-  Keccak.prototype.buffer = function () {
+  Keccak.prototype.arrayBuffer = function () {
     this.finalize();
 
     var blockCount = this.blockCount, s = this.s, outputBlocks = this.outputBlocks, 
@@ -240,6 +238,8 @@
     }
     return buffer;
   };
+
+  Keccak.prototype.buffer = Keccak.prototype.arrayBuffer;
 
   Keccak.prototype.digest = Keccak.prototype.array = function () {
     this.finalize();

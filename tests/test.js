@@ -239,8 +239,9 @@
   runTestCases(methods, testCases);
 
   describe('sha3_512', function () {
-    context('#buffer', function () {
+    context('#arrayBuffer', function () {
       it('should be equal', function () {
+        expect(sha3_512.arrayBuffer('').toHexString()).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
         expect(sha3_512.buffer('').toHexString()).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
       });
     });
@@ -300,6 +301,7 @@
 
     context('when output ArrayBuffer', function () {
       it('should be equal', function () {
+        expect(keccak_512.arrayBuffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
         expect(keccak_512.buffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
       });
     });
