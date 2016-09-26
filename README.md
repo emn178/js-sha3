@@ -85,6 +85,10 @@ keccak_224 = require('js-sha3').keccak_224;
 shake_128 = require('js-sha3').shake_128;
 shake_256 = require('js-sha3').shake_256;
 ```
+If you use TypeScript, you can import like this:
+```TypeScript
+import { sha3_512 } from 'js-sha3';
+```
 
 ## Example
 Code
