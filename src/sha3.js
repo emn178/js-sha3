@@ -106,7 +106,7 @@
 
   Keccak.prototype.update = function (message) {
     var notString = typeof message != 'string';
-    if (notString && message.constructor == root.ArrayBuffer) {
+    if (notString && message instanceof ArrayBuffer) {
       message = new Uint8Array(message);
     }
     var length = message.length, blocks = this.blocks, byteCount = this.byteCount, 
