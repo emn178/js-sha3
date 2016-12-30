@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.5.6
+ * @version 0.5.7
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2016
  * @license MIT
@@ -109,8 +109,8 @@
   }
 
   Keccak.prototype.update = function (message) {
-    var notString = typeof message != 'string';
-    if (notString && message instanceof ArrayBuffer) {
+    var notString = typeof message !== 'string';
+    if (notString && message.constructor === ArrayBuffer) {
       message = new Uint8Array(message);
     }
     var length = message.length, blocks = this.blocks, byteCount = this.byteCount,
@@ -168,7 +168,7 @@
   Keccak.prototype.finalize = function () {
     var blocks = this.blocks, i = this.lastByteIndex, blockCount = this.blockCount, s = this.s;
     blocks[i >> 2] |= this.padding[i & 3];
-    if (this.lastByteIndex == this.byteCount) {
+    if (this.lastByteIndex === this.byteCount) {
       blocks[0] = blocks[blockCount];
       for (i = 1; i < blockCount + 1; ++i) {
         blocks[i] = 0;

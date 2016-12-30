@@ -1,5 +1,6 @@
-// Node.js env
 expect = require('expect.js');
+
+// Node.js env
 var sha3 = require('../src/sha3.js');
 keccak_512 = sha3.keccak_512;
 keccak_384 = sha3.keccak_384;

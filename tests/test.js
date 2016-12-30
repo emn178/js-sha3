@@ -2,7 +2,7 @@
   Array.prototype.toHexString = ArrayBuffer.prototype.toHexString = function () {
     var array = new Uint8Array(this);
     var hex = '';
-    for (var i = 0;i < array.length;++i) {
+    for (var i = 0; i < array.length; ++i) {
       var c = array[i].toString('16');
       hex += c.length == 1 ? '0' + c : c;
     }
@@ -87,7 +87,7 @@
       },
       'special length': {
         'bce9da5b408846edd5bec9f26c2dee9bd835215c3f2b3876197067d87bc4d1af0cd97f94fda59761a0d804fe82383be2c6c4886fbb82e005fcf899449029f221' :'012345678901234567890123456789012345678901234567890123456789012345678901',
-        '8bdcb85e6b52c29fafac0d3daf65492f2e3499e066da1a095a65eb1144849a26b2790a8b39c2a7fb747456f749391d953841a61cb13289f9806f04981c180a86' :'01234567890123456789012345678901234567890123456789012345678901234567890' 
+        '8bdcb85e6b52c29fafac0d3daf65492f2e3499e066da1a095a65eb1144849a26b2790a8b39c2a7fb747456f749391d953841a61cb13289f9806f04981c180a86' :'01234567890123456789012345678901234567890123456789012345678901234567890'
       },
       'Array': {
         'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26': [],
@@ -264,7 +264,7 @@
       it('should be equal', function () {
         var bytes = [84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103];
         var hash = sha3_512.create();
-        for (var i = 0;i < bytes.length;++i) {
+        for (var i = 0; i < bytes.length; ++i) {
           hash.update([bytes[i]]);
         }
         expect(hash.hex()).to.be('01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450');
@@ -279,7 +279,7 @@
         expect(keccak_512('01234567890123456789012345678901234567890123456789012345678901234567890')).to.be('3173e7abc754a0b2909410d78986428a9183e996864af02f421d273d9fa1b4e4a5b14e2998b20767712f53a01ff8f6ae2c3e71e51e2c0f24257b03e6da09eb77');
       });
     });
-  
+
     context('when Array', function () {
       it('should be equal', function () {
         expect(keccak_512([])).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
