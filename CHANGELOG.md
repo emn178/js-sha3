@@ -1,5 +1,14 @@
 # Change Log
 
+## v0.6.0 / 2017-06-15
+### Added
+- cSHAKE method.
+- KMAC method.
+- alias methods without underscore like shake128, keccak512.
+
+### Changed
+- throw error if input type is incorrect.
+
 ## v0.5.7 / 2016-12-30
 ### Fixed
 - ArrayBuffer detection in old browsers.
@@ -12,6 +21,7 @@
 ### Added
 - TypeScript support.
 - ArrayBuffer method.
+
 ### Deprecated
 - Buffer method.
 
@@ -38,6 +48,7 @@
 ## v0.4.1 / 2015-09-18
 ### Added
 - Integer array output.
+
 ### Fixed
 - Shake output incorrect when it's greater than 1088.
 
@@ -58,6 +69,7 @@
 ## v0.2.0 / 2015-04-04
 ### Added
 - NIST's May 2014 SHA-3 version.
+
 ### Changed
 - Rename original methods to keccak.
 

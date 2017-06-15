@@ -19,8 +19,8 @@ A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 enco
 [Keccak-384 Online](http://emn178.github.io/online-tools/keccak_384.html)  
 [Keccak-256 Online](http://emn178.github.io/online-tools/keccak_256.html)  
 [Keccak-224 Online](http://emn178.github.io/online-tools/keccak_224.html)  
-[Shake-128 Online](http://emn178.github.io/online-tools/shake_128.html)  
-[Shake-256 Online](http://emn178.github.io/online-tools/shake_256.html)  
+[Shake128 Online](http://emn178.github.io/online-tools/shake_128.html)  
+[Shake256 Online](http://emn178.github.io/online-tools/shake_256.html)  
 
 ## Download
 [Compress](https://raw.github.com/emn178/js-sha3/master/build/sha3.min.js)  
@@ -42,23 +42,27 @@ sha3_512('Message to hash');
 sha3_384('Message to hash');
 sha3_256('Message to hash');
 sha3_224('Message to hash');
-keccak_512('Message to hash');
-keccak_384('Message to hash');
-keccak_256('Message to hash');
-keccak_224('Message to hash');
-shake_128('Message to hash', 256);
-shake_256('Message to hash', 512);
+keccak512('Message to hash');
+keccak384('Message to hash');
+keccak256('Message to hash');
+keccak224('Message to hash');
+shake128('Message to hash', 256);
+shake256('Message to hash', 512);
+cshake128('Message to hash', 256, 'function name', 'customization');
+cshake256('Message to hash', 512, 'function name', 'customization');
+kmac128('key', 'Message to hash', 256, 'customization');
+kmac256('key', 'Message to hash', 512, 'customization');
 
 // Support ArrayBuffer output
-var buffer = keccak_224.buffer('Message to hash');
+var buffer = keccak224.buffer('Message to hash');
 
 // Support Array output
-var buffer = keccak_224.array('Message to hash');
+var buffer = keccak224.array('Message to hash');
 
 // update hash
 sha3_512.update('Message ').update('to ').update('hash').hex();
 // specify shake output bits at first update
-shake_128.update('Message ', 256).update('to ').update('hash').hex();
+shake128.update('Message ', 256).update('to ').update('hash').hex();
 
 // or to use create
 var hash = sha3_512.create();
@@ -67,10 +71,16 @@ hash.update('...');
 hash.hex();
 
 // specify shake output bits when creating
-var hash = shake_128.create(256);
+var hash = shake128.create(256);
 hash.update('...');
 hash.update('...');
 hash.hex();
+
+// specify cshake output bits, function name and customization when creating
+var hash = cshake128.create(256, 'function name', 'customization');
+
+// specify kmac key, output bits and customization when creating
+var hash = kmac128.create('key', 256, 'customization');
 ```
 If you use node.js, you should require the module first:
 ```JavaScript
@@ -78,12 +88,16 @@ sha3_512 = require('js-sha3').sha3_512;
 sha3_384 = require('js-sha3').sha3_384;
 sha3_256 = require('js-sha3').sha3_256;
 sha3_224 = require('js-sha3').sha3_224;
-keccak_512 = require('js-sha3').keccak_512;
-keccak_384 = require('js-sha3').keccak_384;
-keccak_256 = require('js-sha3').keccak_256;
-keccak_224 = require('js-sha3').keccak_224;
-shake_128 = require('js-sha3').shake_128;
-shake_256 = require('js-sha3').shake_256;
+keccak512 = require('js-sha3').keccak512;
+keccak384 = require('js-sha3').keccak384;
+keccak256 = require('js-sha3').keccak256;
+keccak224 = require('js-sha3').keccak224;
+shake128 = require('js-sha3').shake128;
+shake256 = require('js-sha3').shake256;
+cshake128 = require('js-sha3').cshake128;
+cshake256 = require('js-sha3').cshake256;
+kmac128 = require('js-sha3').kmac128;
+kmac256 = require('js-sha3').kmac256;
 ```
 If you use TypeScript, you can import like this:
 ```TypeScript
@@ -129,46 +143,46 @@ sha3_224('The quick brown fox jumps over the lazy dog');
 sha3_224('The quick brown fox jumps over the lazy dog.');
 // 2d0708903833afabdd232a20201176e8b58c5be8a6fe74265ac54db0
 
-keccak_512('');
+keccak512('');
 // 0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e
 
-keccak_512('The quick brown fox jumps over the lazy dog');
+keccak512('The quick brown fox jumps over the lazy dog');
 // d135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609
 
-keccak_512('The quick brown fox jumps over the lazy dog.');
+keccak512('The quick brown fox jumps over the lazy dog.');
 // ab7192d2b11f51c7dd744e7b3441febf397ca07bf812cceae122ca4ded6387889064f8db9230f173f6d1ab6e24b6e50f065b039f799f5592360a6558eb52d760
 
-keccak_384('');
+keccak384('');
 // 2c23146a63a29acf99e73b88f8c24eaa7dc60aa771780ccc006afbfa8fe2479b2dd2b21362337441ac12b515911957ff
 
-keccak_384('The quick brown fox jumps over the lazy dog');
+keccak384('The quick brown fox jumps over the lazy dog');
 // 283990fa9d5fb731d786c5bbee94ea4db4910f18c62c03d173fc0a5e494422e8a0b3da7574dae7fa0baf005e504063b3
 
-keccak_384('The quick brown fox jumps over the lazy dog.');
+keccak384('The quick brown fox jumps over the lazy dog.');
 // 9ad8e17325408eddb6edee6147f13856ad819bb7532668b605a24a2d958f88bd5c169e56dc4b2f89ffd325f6006d820b
 
-keccak_256('');
+keccak256('');
 // c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
 
-keccak_256('The quick brown fox jumps over the lazy dog');
+keccak256('The quick brown fox jumps over the lazy dog');
 // 4d741b6f1eb29cb2a9b9911c82f56fa8d73b04959d3d9d222895df6c0b28aa15
 
-keccak_256('The quick brown fox jumps over the lazy dog.');
+keccak256('The quick brown fox jumps over the lazy dog.');
 // 578951e24efd62a3d63a86f7cd19aaa53c898fe287d2552133220370240b572d
 
-keccak_224('');
+keccak224('');
 // f71837502ba8e10837bdd8d365adb85591895602fc552b48b7390abd
 
-keccak_224('The quick brown fox jumps over the lazy dog');
+keccak224('The quick brown fox jumps over the lazy dog');
 // 310aee6b30c47350576ac2873fa89fd190cdc488442f3ef654cf23fe
 
-keccak_224('The quick brown fox jumps over the lazy dog.');
+keccak224('The quick brown fox jumps over the lazy dog.');
 // c59d4eaeac728671c635ff645014e2afa935bebffdb5fbd207ffdeab
 
-shake_128('', 256);
+shake128('', 256);
 // 7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26
 
-shake_256('', 512);
+shake256('', 512);
 // 46b9dd2b0ba88d13233b3feb743eeb243fcd52ea62b81b82b50c27646ed5762fd75dc4ddd8c0f200cb05019d67b592f6fc821c49479ab48640292eacb3b7c4be
 ```
 It also supports UTF-8 encoding:
@@ -187,16 +201,16 @@ sha3_256('中文');
 sha3_224('中文');
 // 106d169e10b61c2a2a05554d3e631ec94467f8316640f29545d163ee
 
-keccak_512('中文');
+keccak512('中文');
 // 2f6a1bd50562230229af34b0ccf46b8754b89d23ae2c5bf7840b4acfcef86f87395edc0a00b2bfef53bafebe3b79de2e3e01cbd8169ddbb08bde888dcc893524
 
-keccak_384('中文');
+keccak384('中文');
 // 743f64bb7544c6ed923be4741b738dde18b7cee384a3a09c4e01acaaac9f19222cdee137702bd3aa05dc198373d87d6c
 
-keccak_256('中文');
+keccak256('中文');
 // 70a2b6579047f0a977fcb5e9120a4e07067bea9abb6916fbc2d13ffb9a4e4eee
 
-keccak_224('中文');
+keccak224('中文');
 // f71837502ba8e10837bdd8d365adb85591895602fc552b48b7390abd
 ```
 

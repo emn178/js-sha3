@@ -1,4 +1,4 @@
-(function (sha3_512, sha3_384, sha3_256, sha3_224, keccak_512, keccak_384, keccak_256, keccak_224) {
+(function (sha3_512, sha3_384, sha3_256, sha3_224, keccak512, keccak384, keccak256, keccak224) {
   Array.prototype.toHexString = ArrayBuffer.prototype.toHexString = function () {
     var array = new Uint8Array(this);
     var hex = '';
@@ -49,20 +49,20 @@
       call: sha3_224
     },
     {
-      name: 'keccak_512',
-      call: keccak_512
+      name: 'keccak512',
+      call: keccak512
     },
     {
-      name: 'keccak_384',
-      call: keccak_384
+      name: 'keccak384',
+      call: keccak384
     },
     {
-      name: 'keccak_256',
-      call: keccak_256
+      name: 'keccak256',
+      call: keccak256
     },
     {
-      name: 'keccak_224',
-      call: keccak_224
+      name: 'keccak224',
+      call: keccak224
     }
   ];
 
@@ -159,7 +159,7 @@
         'bd05581e02445c53e05aad2014f6a3819d77a9dff918b8c6bf60bd06': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
       }
     },
-    keccak_512: {
+    keccak512: {
       'ascii': {
         '0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e': '',
         'd135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609': 'The quick brown fox jumps over the lazy dog',
@@ -178,7 +178,7 @@
         'd04ff5b0e85e9968be2a4d4e133c15c7ccee7497198bb651599a97d11d00bca6048d329ab75aa454566cd532648fa1cb4551985d9d645de9fa43a311a9ee8e4d': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
       }
     },
-    keccak_384: {
+    keccak384: {
       'ascii': {
         '2c23146a63a29acf99e73b88f8c24eaa7dc60aa771780ccc006afbfa8fe2479b2dd2b21362337441ac12b515911957ff': '',
         '283990fa9d5fb731d786c5bbee94ea4db4910f18c62c03d173fc0a5e494422e8a0b3da7574dae7fa0baf005e504063b3': 'The quick brown fox jumps over the lazy dog',
@@ -197,7 +197,7 @@
         '66414c090cc3fe9c396d313cbaa100aefd335e851838b29382568b7f57357ada7c54b8fa8c17f859945bba88b2c2e332': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
       }
     },
-    keccak_256: {
+    keccak256: {
       'ascii': {
         'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470': '',
         '4d741b6f1eb29cb2a9b9911c82f56fa8d73b04959d3d9d222895df6c0b28aa15': 'The quick brown fox jumps over the lazy dog',
@@ -216,7 +216,7 @@
         'ffabf9bba2127c4928d360c9905cb4911f0ec21b9c3b89f3b242bccc68389e36': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
       }
     },
-    keccak_224: {
+    keccak224: {
       'ascii': {
         'f71837502ba8e10837bdd8d365adb85591895602fc552b48b7390abd': '',
         '310aee6b30c47350576ac2873fa89fd190cdc488442f3ef654cf23fe': 'The quick brown fox jumps over the lazy dog',
@@ -272,45 +272,77 @@
     });
   });
 
-  describe('#keccak_512', function () {
+  describe('#keccak512', function () {
     context('when special length', function () {
       it('should be equal', function () {
-        expect(keccak_512('012345678901234567890123456789012345678901234567890123456789012345678901')).to.be('90b1d032c3bf06dcc78a46fe52054bab1250600224bfc6dfbfb40a7877c55e89bb982799a2edf198568a4166f6736678b45e76b12fac813cfdf0a76714e5eae8');
-        expect(keccak_512('01234567890123456789012345678901234567890123456789012345678901234567890')).to.be('3173e7abc754a0b2909410d78986428a9183e996864af02f421d273d9fa1b4e4a5b14e2998b20767712f53a01ff8f6ae2c3e71e51e2c0f24257b03e6da09eb77');
+        expect(keccak512('012345678901234567890123456789012345678901234567890123456789012345678901')).to.be('90b1d032c3bf06dcc78a46fe52054bab1250600224bfc6dfbfb40a7877c55e89bb982799a2edf198568a4166f6736678b45e76b12fac813cfdf0a76714e5eae8');
+        expect(keccak512('01234567890123456789012345678901234567890123456789012345678901234567890')).to.be('3173e7abc754a0b2909410d78986428a9183e996864af02f421d273d9fa1b4e4a5b14e2998b20767712f53a01ff8f6ae2c3e71e51e2c0f24257b03e6da09eb77');
       });
     });
 
     context('when Array', function () {
       it('should be equal', function () {
-        expect(keccak_512([])).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-        expect(keccak_512([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])).to.be('d135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609');
+        expect(keccak512([])).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+        expect(keccak512([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])).to.be('d135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609');
       });
     });
 
     context('when Uint8Array', function () {
       it('should be equal', function () {
-        expect(keccak_512(new Uint8Array([]))).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-        expect(keccak_512(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))).to.be('d135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609');
+        expect(keccak512(new Uint8Array([]))).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+        expect(keccak512(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))).to.be('d135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609');
       });
     });
 
     context('when ArrayBuffer', function () {
       it('should be equal', function () {
-        expect(keccak_512(new ArrayBuffer(0))).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+        expect(keccak512(new ArrayBuffer(0))).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
       });
     });
 
     context('when output ArrayBuffer', function () {
       it('should be equal', function () {
-        expect(keccak_512.arrayBuffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-        expect(keccak_512.buffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+        expect(keccak512.arrayBuffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+        expect(keccak512.buffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
       });
     });
 
     context('when output Array', function () {
       it('should be equal', function () {
-        expect(keccak_512.array('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+        expect(keccak512.array('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
+      });
+    });
+
+    context('when incorrect input', function () {
+      it('should throw error', function () {
+        expect(function () {
+          keccak512(1);
+        }).to.throwError();
+      });
+    });
+
+    context('#encodeString', function () {
+      context('when incorrect input', function () {
+        it('should throw error', function () {
+          expect(function () {
+            keccak512.create().encodeString(1);
+          }).to.throwError();
+        });
+      });
+
+      context('when ArrayBuffer', function () {
+        it('should throw error', function () {
+          expect(keccak512.create().encodeString(new ArrayBuffer(0))).to.be(2);
+        });
+      });
+
+      context('when UTF-8', function () {
+        it('should throw error', function () {
+          expect(keccak512.create().encodeString('中文')).to.be(8);
+          expect(keccak512.create().encodeString('aécio')).to.be(8);
+          expect(keccak512.create().encodeString('𠜎')).to.be(6);
+        });
       });
     });
   });
-})(sha3_512, sha3_384, sha3_256, sha3_224, keccak_512, keccak_384, keccak_256, keccak_224);
+})(sha3_512, sha3_384, sha3_256, sha3_224, keccak512, keccak384, keccak256, keccak224);
