@@ -163,6 +163,6 @@ export var cshake_256: CshakeHash;
 export var cshake128: CshakeHash;
 export var cshake256: CshakeHash;
 export var kmac_128: KmacHash;
-export var kmac_256: kmacHash;
+export var kmac_256: KmacHash;
 export var kmac128: KmacHash;
 export var kmac256: KmacHash;
