@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.6.1 / 2017-07-03
+### Fixed
+- Typo on variable kmac_256 type definition. #12
+
 ## v0.6.0 / 2017-06-15
 ### Added
 - cSHAKE method.
