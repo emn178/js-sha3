@@ -27,6 +27,7 @@
       it('should be equal', function () {
         expect(shake128('', 16)).to.be('7f9c');
         expect(shake128('', 24)).to.be('7f9c2b');
+        expect(shake128.array('', 8)).to.eql([0x7f]);
         expect(shake128.array('', 16)).to.eql([0x7f, 0x9c]);
         expect(shake128.array('', 24)).to.eql([0x7f, 0x9c, 0x2b]);
       });

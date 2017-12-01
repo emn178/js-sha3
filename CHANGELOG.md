@@ -1,5 +1,14 @@
 # Change Log
 
+## v0.7.0 / 2017-12-01
+### Added
+- AMD support.
+- support for web worker. #13
+
+### Changed
+- throw error if input type is incorrect when cSHAKE and KMAC.
+- freeze hash after finalize.
+
 ## v0.6.1 / 2017-07-03
 ### Fixed
 - Typo on variable kmac_256 type definition. #12

@@ -1,0 +1,7 @@
+/node_modules/
+/coverage/
+/.nyc_output/
+/tests/
+.travis.yml
+.npmignore
+bower.json

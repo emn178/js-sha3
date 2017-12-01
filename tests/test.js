@@ -9,63 +9,6 @@
     return hex;
   };
 
-  function runTestCases(methods, testCases) {
-    methods.forEach(function (method) {
-      describe('#' + method.name, function () {
-        var methodTestCases = testCases[method.name];
-        for (var testCaseName in methodTestCases) {
-          (function (testCaseName) {
-            var testCase = methodTestCases[testCaseName];
-            context('when ' + testCaseName, function () {
-              for (var hash in testCase) {
-                (function (message, hash) {
-                  it('should be equal', function () {
-                    expect(method.call(message)).to.be(hash);
-                  });
-                })(testCase[hash], hash);
-              }
-            });
-          })(testCaseName);
-        }
-      });
-    });
-  }
-
-  var methods = [
-    {
-      name: 'sha3_512',
-      call: sha3_512
-    },
-    {
-      name: 'sha3_384',
-      call: sha3_384
-    },
-    {
-      name: 'sha3_256',
-      call: sha3_256
-    },
-    {
-      name: 'sha3_224',
-      call: sha3_224
-    },
-    {
-      name: 'keccak512',
-      call: keccak512
-    },
-    {
-      name: 'keccak384',
-      call: keccak384
-    },
-    {
-      name: 'keccak256',
-      call: keccak256
-    },
-    {
-      name: 'keccak224',
-      call: keccak224
-    }
-  ];
-
   var testCases = {
     sha3_512: {
       'ascii': {
@@ -92,14 +35,6 @@
       'Array': {
         'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26': [],
         '01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450': [84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]
-      },
-      'Uint8Array': {
-        'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26': new Uint8Array([]),
-        '01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
-      },
-      'ArrayBuffer': {
-        'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26': new ArrayBuffer(0),
-        '01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]).buffer
       }
     },
     sha3_384: {
@@ -237,104 +172,192 @@
     }
   };
 
-  runTestCases(methods, testCases);
+  if (!(typeof JS_SHA3_NO_ARRAY_BUFFER === 'boolean' && JS_SHA3_NO_ARRAY_BUFFER)) {
+    testCases.sha3_512.Uint8Array = {
+      'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26': new Uint8Array([]),
+      '01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])
+    };
+    testCases.sha3_512.ArrayBuffer = {
+      'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26': new ArrayBuffer(0),
+      '01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450': new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]).buffer
+    };
+  }
 
-  describe('sha3_512', function () {
-    context('#arrayBuffer', function () {
-      it('should be equal', function () {
-        expect(sha3_512.arrayBuffer('').toHexString()).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
-        expect(sha3_512.buffer('').toHexString()).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
-      });
-    });
+  if (typeof BUFFER === 'boolean' && BUFFER) {
+    testCases.sha3_512.Buffer = {
+      'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26': new Buffer(0),
+      '01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450': new Buffer(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))
+    };
+  }
 
-    context('#hex', function () {
-      it('should be equal', function () {
-        expect(sha3_512.hex('')).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
-      });
-    });
+  var errorTestCases = [null, undefined, { length: 0 }, 0, 1, false, true, NaN, Infinity, function () {}];
 
-    context('#update', function () {
-      it('should be equal', function () {
-        expect(sha3_512.update('').hex()).to.be('a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26');
-        expect(sha3_512.update('The quick brown fox ').update('jumps over the lazy dog').hex()).to.be('01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450');
-      });
-    });
-
-    context('#create', function () {
-      it('should be equal', function () {
-        var bytes = [84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103];
-        var hash = sha3_512.create();
-        for (var i = 0; i < bytes.length; ++i) {
-          hash.update([bytes[i]]);
+  function runTestCases(name, algorithm) {
+    var methods = [
+      {
+        name: name,
+        call: algorithm,
+      },
+      {
+        name: name + '.hex',
+        call: algorithm.hex
+      },
+      {
+        name: name + '.array',
+        call: function (message) {
+          return algorithm.array(message).toHexString();
         }
-        expect(hash.hex()).to.be('01dedd5de4ef14642445ba5f5b97c15e47b9ad931326e4b0727cd94cefc44fff23f07bf543139939b49128caf436dc1bdee54fcb24023a08d9403f9b4bf0d450');
+      },
+      {
+        name: name + '.digest',
+        call: function (message) {
+          return algorithm.digest(message).toHexString();
+        }
+      },
+      {
+        name: name + '.arrayBuffer',
+        call: function (message) {
+          return algorithm.arrayBuffer(message).toHexString();
+        }
+      }
+    ];
+
+    var classMethods = [
+      {
+        name: 'create',
+        call: function (message) {
+          return algorithm.create().update(message).toString();
+        }
+      },
+      {
+        name: 'update',
+        call: function (message) {
+          return algorithm.update(message).toString();
+        }
+      },
+      {
+        name: 'hex',
+        call: function (message) {
+          return algorithm.update(message).hex();
+        }
+      },
+      {
+        name: 'array',
+        call: function (message) {
+          return algorithm.update(message).array().toHexString();
+        }
+      },
+      {
+        name: 'digest',
+        call: function (message) {
+          return algorithm.update(message).digest().toHexString();
+        }
+      },
+      {
+        name: 'arrayBuffer',
+        call: function (message) {
+          return algorithm.update(message).arrayBuffer().toHexString();
+        }
+      },
+      {
+        name: 'finalize',
+        call: function (message) {
+          var hash = algorithm.update(message);
+          hash.hex();
+          hash.update(message);
+          return hash.hex();
+        }
+      }
+    ];
+
+    var subTestCases = testCases[name];
+
+    describe(name, function () {
+      methods.forEach(function (method) {
+        describe('#' + method.name, function () {
+          for (var testCaseName in subTestCases) {
+            (function (testCaseName) {
+              var testCase = subTestCases[testCaseName];
+              context('when ' + testCaseName, function () {
+                for (var hash in testCase) {
+                  (function (message, hash) {
+                    it('should be equal', function () {
+                      expect(method.call(message)).to.be(hash);
+                    });
+                  })(testCase[hash], hash);
+                }
+              });
+            })(testCaseName);
+          }
+        });
+      });
+
+      classMethods.forEach(function (method) {
+        describe('#' + method.name, function () {
+          for (var testCaseName in subTestCases) {
+            (function (testCaseName) {
+              var testCase = subTestCases[testCaseName];
+              context('when ' + testCaseName, function () {
+                for (var hash in testCase) {
+                  (function (message, hash) {
+                    it('should be equal', function () {
+                      expect(method.call(message)).to.be(hash);
+                    });
+                  })(testCase[hash], hash);
+                }
+              });
+            })(testCaseName);
+          }
+        });
+      });
+
+      describe('#' + name, function () {
+        errorTestCases.forEach(function (testCase) {
+          context('when ' + testCase, function () {
+            it('should throw error', function () {
+              expect(function () {
+                algorithm(testCase);
+              }).to.throwError(/input is invalid type/);
+            });
+          });
+        });
       });
     });
-  });
+  }
+
+  runTestCases('sha3_512', sha3_512);
+  runTestCases('sha3_384', sha3_384);
+  runTestCases('sha3_256', sha3_256);
+  runTestCases('sha3_224', sha3_224);
+  runTestCases('keccak512', keccak512);
+  runTestCases('keccak384', keccak384);
+  runTestCases('keccak256', keccak256);
+  runTestCases('keccak224', keccak224);
 
   describe('#keccak512', function () {
-    context('when special length', function () {
-      it('should be equal', function () {
-        expect(keccak512('012345678901234567890123456789012345678901234567890123456789012345678901')).to.be('90b1d032c3bf06dcc78a46fe52054bab1250600224bfc6dfbfb40a7877c55e89bb982799a2edf198568a4166f6736678b45e76b12fac813cfdf0a76714e5eae8');
-        expect(keccak512('01234567890123456789012345678901234567890123456789012345678901234567890')).to.be('3173e7abc754a0b2909410d78986428a9183e996864af02f421d273d9fa1b4e4a5b14e2998b20767712f53a01ff8f6ae2c3e71e51e2c0f24257b03e6da09eb77');
-      });
-    });
-
-    context('when Array', function () {
-      it('should be equal', function () {
-        expect(keccak512([])).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-        expect(keccak512([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103])).to.be('d135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609');
-      });
-    });
-
-    context('when Uint8Array', function () {
-      it('should be equal', function () {
-        expect(keccak512(new Uint8Array([]))).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-        expect(keccak512(new Uint8Array([84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114, 111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112, 115, 32, 111, 118, 101, 114, 32, 116, 104, 101, 32, 108, 97, 122, 121, 32, 100, 111, 103]))).to.be('d135bb84d0439dbac432247ee573a23ea7d3c9deb2a968eb31d47c4fb45f1ef4422d6c531b5b9bd6f449ebcc449ea94d0a8f05f62130fda612da53c79659f609');
-      });
-    });
-
-    context('when ArrayBuffer', function () {
-      it('should be equal', function () {
-        expect(keccak512(new ArrayBuffer(0))).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-      });
-    });
-
-    context('when output ArrayBuffer', function () {
-      it('should be equal', function () {
-        expect(keccak512.arrayBuffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-        expect(keccak512.buffer('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-      });
-    });
-
-    context('when output Array', function () {
-      it('should be equal', function () {
-        expect(keccak512.array('').toHexString()).to.be('0eab42de4c3ceb9235fc91acffe746b29c29a8c366b7c60e4e67c466f36a4304c00fa9caf9d87976ba469bcbe06713b435f091ef2769fb160cdab33d3670680e');
-      });
-    });
-
-    context('when incorrect input', function () {
-      it('should throw error', function () {
-        expect(function () {
-          keccak512(1);
-        }).to.throwError();
-      });
-    });
-
     context('#encodeString', function () {
-      context('when incorrect input', function () {
-        it('should throw error', function () {
-          expect(function () {
-            keccak512.create().encodeString(1);
-          }).to.throwError();
+      errorTestCases.forEach(function (testCase) {
+        context('when ' + testCase, function () {
+          it('should throw error', function () {
+            expect(function () {
+              keccak512.create().encodeString(testCase);
+            }).to.throwError(/input is invalid type/);
+          });
         });
       });
 
-      context('when ArrayBuffer', function () {
-        it('should throw error', function () {
-          expect(keccak512.create().encodeString(new ArrayBuffer(0))).to.be(2);
+      if (!(typeof JS_SHA3_NO_ARRAY_BUFFER === 'boolean' && JS_SHA3_NO_ARRAY_BUFFER)) {
+        context('when ArrayBuffer', function () {
+          it('should throw error', function () {
+            expect(keccak512.create().encodeString(new ArrayBuffer(0))).to.be(2);
+          });
         });
-      });
+        context('when Uint8Array', function () {
+          it('should throw error', function () {
+            expect(keccak512.create().encodeString(new Uint8Array(0))).to.be(2);
+          });
+        });
+      }
 
       context('when UTF-8', function () {
         it('should throw error', function () {

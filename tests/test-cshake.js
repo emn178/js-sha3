@@ -64,6 +64,6 @@
           expect(testCase.method(c.input, c.bits, c.n, c.s)).to.be(c.output);
         });
       });
-    });    
+    });
   });
 })(cshake256, cshake128);
