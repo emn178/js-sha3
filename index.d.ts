@@ -43,6 +43,20 @@ interface Hash {
   (message: Message): string;
 
   /**
+   * Hash and return ArrayBuffer.
+   *
+   * @param message The message you want to hash.
+   */
+  arrayBuffer(message: Message): ArrayBuffer;
+
+  /**
+   * Hash and return ArrayBuffer.
+   *
+   * @param message The message you want to hash.
+   */
+  buffer(message: Message): ArrayBuffer;
+
+  /**
    * Create a hash object.
    */
   create(): Hasher;
