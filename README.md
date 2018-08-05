@@ -7,6 +7,7 @@
 A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.
 
 ## Notice
+* v0.8.0+ will throw an error if try to update hash after finalize.
 * Sha3 methods has been renamed to keccak since v0.2.0. It means that sha3 methods of v0.1.x are equal to keccak methods of v0.2.x and later.
 * `buffer` method is deprecated. This maybe confuse with Buffer in node.js. Please use `arrayBuffer` instead.
 
@@ -54,10 +55,11 @@ kmac128('key', 'Message to hash', 256, 'customization');
 kmac256('key', 'Message to hash', 512, 'customization');
 
 // Support ArrayBuffer output
-var buffer = keccak224.buffer('Message to hash');
+var arrayBuffer = keccak224.arrayBuffer('Message to hash');
 
 // Support Array output
-var buffer = keccak224.array('Message to hash');
+var bytes = keccak224.digest('Message to hash');
+var bytes = keccak224.array('Message to hash');
 
 // update hash
 sha3_512.update('Message ').update('to ').update('hash').hex();

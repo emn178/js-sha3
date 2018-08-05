@@ -264,7 +264,7 @@
         call: function (message) {
           var hash = algorithm.update(message);
           hash.hex();
-          hash.update(message);
+          hash.finalize();
           return hash.hex();
         }
       }
@@ -319,6 +319,16 @@
                 algorithm(testCase);
               }).to.throwError(/input is invalid type/);
             });
+          });
+        });
+
+        context('when update after finalize', function () {
+          it('should throw error', function () {
+            expect(function () {
+              var hash = algorithm.update('any');
+              hash.hex();
+              hash.update('any');
+            }).to.throwError(/finalize already called/);
           });
         });
       });

@@ -1,16 +1,17 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.7.0
+ * @version 0.8.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2015-2017
+ * @copyright Chen, Yi-Cyuan 2015-2018
  * @license MIT
  */
 /*jslint bitwise: true */
 (function () {
   'use strict';
 
-  var ERROR = 'input is invalid type';
+  var INPUT_ERROR = 'input is invalid type';
+  var FINALIZE_ERROR = 'finalize already called';
   var WINDOW = typeof window === 'object';
   var root = WINDOW ? window : {};
   if (root.JS_SHA3_NO_WINDOW) {
@@ -185,22 +186,22 @@
 
   Keccak.prototype.update = function (message) {
     if (this.finalized) {
-      return;
+      throw new Error(FINALIZE_ERROR);
     }
     var notString, type = typeof message;
     if (type !== 'string') {
       if (type === 'object') {
         if (message === null) {
-          throw ERROR;
+          throw new Error(INPUT_ERROR);
         } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
           message = new Uint8Array(message);
         } else if (!Array.isArray(message)) {
           if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
-            throw ERROR;
+            throw new Error(INPUT_ERROR);
           }
         }
       } else {
-        throw ERROR;
+        throw new Error(INPUT_ERROR);
       }
       notString = true;
     }
@@ -281,16 +282,16 @@
     if (type !== 'string') {
       if (type === 'object') {
         if (str === null) {
-          throw ERROR;
+          throw new Error(INPUT_ERROR);
         } else if (ARRAY_BUFFER && str.constructor === ArrayBuffer) {
           str = new Uint8Array(str);
         } else if (!Array.isArray(str)) {
           if (!ARRAY_BUFFER || !ArrayBuffer.isView(str)) {
-            throw ERROR;
+            throw new Error(INPUT_ERROR);
           }
         }
       } else {
-        throw ERROR;
+        throw new Error(INPUT_ERROR);
       }
       notString = true;
     }

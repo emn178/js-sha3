@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.8.0 / 2018-08-05
+### Added
+- TypeScript definitions.
+
+### Changed
+- throw error if update after finalize
+
 ## v0.7.0 / 2017-12-01
 ### Added
 - AMD support.

@@ -43,6 +43,13 @@ interface Hash {
   (message: Message): string;
 
   /**
+   * Hash and return hex string.
+   *
+   * @param message The message you want to hash.
+   */
+  hex(message: Message): string;
+
+  /**
    * Hash and return ArrayBuffer.
    *
    * @param message The message you want to hash.
@@ -50,11 +57,18 @@ interface Hash {
   arrayBuffer(message: Message): ArrayBuffer;
 
   /**
-   * Hash and return ArrayBuffer.
+   * Hash and return integer array.
    *
    * @param message The message you want to hash.
    */
-  buffer(message: Message): ArrayBuffer;
+  digest(message: Message): number[];
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param message The message you want to hash.
+   */
+  array(message: Message): number[];
 
   /**
    * Create a hash object.
@@ -79,8 +93,41 @@ interface ShakeHash {
   (message: Message, outputBits: number): string;
 
   /**
+   * Hash and return hex string.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   */
+  hex(message: Message, outputBits: number): string;
+
+  /**
+   * Hash and return ArrayBuffer.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   */
+  arrayBuffer(message: Message, outputBits: number): ArrayBuffer;
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   */
+  digest(message: Message, outputBits: number): number[];
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   */
+  array(message: Message, outputBits: number): number[];
+
+  /**
    * Create a hash object.
    *
+   * @param outputBits The length of output.
    * @param outputBits The length of output.
    */
   create(outputBits: number): Hasher;
@@ -104,6 +151,54 @@ interface CshakeHash {
    * @param customization The customization string.
    */
   (message: Message, outputBits: number, functionName: Message, customization: Message): string;
+
+  /**
+   * Hash and return hex string.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param functionName The function name string.
+   * @param customization The customization string.
+   */
+  hex(message: Message, outputBits: number, functionName: Message, customization: Message): string;
+
+  /**
+   * Hash and return ArrayBuffer.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param functionName The function name string.
+   * @param customization The customization string.
+   */
+  arrayBuffer(message: Message, outputBits: number, functionName: Message, customization: Message): ArrayBuffer;
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param functionName The function name string.
+   * @param customization The customization string.
+   */
+  digest(message: Message, outputBits: number, functionName: Message, customization: Message): number[];
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param functionName The function name string.
+   * @param customization The customization string.
+   */
+  array(message: Message, outputBits: number, functionName: Message, customization: Message): number[];
+
+  /**
+   * Create a hash object.
+   *
+   * @param outputBits The length of output.
+   * @param outputBits The length of output.
+   */
+  create(outputBits: number): Hasher;
 
   /**
    * Create a hash object.
@@ -135,6 +230,46 @@ interface KmacHash {
    * @param customization The customization string.
    */
   (key: Message, message: Message, outputBits: number, customization: Message): string;
+
+  /**
+   * Hash and return hex string.
+   *
+   * @param key The key string.
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  hex(key: Message, message: Message, outputBits: number, customization: Message): string;
+
+  /**
+   * Hash and return ArrayBuffer.
+   *
+   * @param key The key string.
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  arrayBuffer(key: Message, message: Message, outputBits: number, customization: Message): ArrayBuffer;
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param key The key string.
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  digest(key: Message, message: Message, outputBits: number, customization: Message): number[];
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param key The key string.
+   * @param message The message you want to hash.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  array(key: Message, message: Message, outputBits: number, customization: Message): number[];
 
   /**
    * Create a hash object.
