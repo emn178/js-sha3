@@ -2,7 +2,7 @@ expect = require('expect.js');
 Worker = require('webworker-threads').Worker;
 
 function unset() {
-  delete require.cache[require.resolve('../src/sha3.js')];
+  delete require.cache[require.resolve('../sha3.js')];
   delete require.cache[require.resolve('./test.js')];
   sha3_512 = null;
   sha3_384 = null;
@@ -26,7 +26,7 @@ function unset() {
 }
 
 function requireToGlobal() {
-  var sha3 = require('../src/sha3.js');
+  var sha3 = require('../sha3.js');
   keccak512 = sha3.keccak512;
   keccak384 = sha3.keccak384;
   keccak256 = sha3.keccak256;
@@ -51,7 +51,7 @@ function runCommonJsTest() {
 
 function runWindowTest(extra) {
   window = global;
-  require('../src/sha3.js');
+  require('../sha3.js');
   require('./test.js');
   if (extra) {
     require('./test-shake.js');
@@ -112,7 +112,7 @@ define = function (func) {
 };
 define.amd = true;
 
-require('../src/sha3.js');
+require('../sha3.js');
 unset();
 
 // webworker
@@ -127,7 +127,7 @@ delete require.cache[require.resolve('./worker-test.js')];
 JS_SHA3_NO_WINDOW = true;
 JS_SHA3_NO_NODE_JS = true;
 WORKER = './worker.js';
-SOURCE = '../src/sha3.js';
+SOURCE = '../sha3.js';
 window = global;
 self = global;
 
