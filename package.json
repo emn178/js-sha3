@@ -2,7 +2,7 @@
   "name": "js-sha3",
   "version": "0.8.0",
   "description": "A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.",
-  "main": "src/sha3.js",
+  "main": "sha3.js",
   "devDependencies": {
     "expect.js": "~0.3.1",
     "mocha": "~2.3.4",
@@ -14,7 +14,7 @@
     "test": "nyc mocha tests/node-test.js",
     "report": "nyc --reporter=html --reporter=text mocha tests/node-test.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "build": "uglifyjs src/sha3.js -c -m --comments --output build/sha3.min.js"
+    "build": "uglifyjs sha3.js -c -m --comments --output build/sha3.min.js"
   },
   "repository": {
     "type": "git",
