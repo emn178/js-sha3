@@ -193,7 +193,7 @@
       if (type === 'object') {
         if (message === null) {
           throw new Error(INPUT_ERROR);
-        } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
+        } else if (ARRAY_BUFFER && message.constructor.name === "ArrayBuffer") {
           message = new Uint8Array(message);
         } else if (!Array.isArray(message)) {
           if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
