@@ -1,9 +1,9 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.8.0
+ * @version 0.9.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2015-2018
+ * @copyright Chen, Yi-Cyuan 2015-2023
  * @license MIT
  */
 /*jslint bitwise: true */
@@ -323,7 +323,7 @@
     for (var i = 0; i < strs.length; ++i) {
       bytes += this.encodeString(strs[i]);
     }
-    var paddingBytes = w - bytes % w;
+    var paddingBytes = (w - bytes % w) % w;
     var zeros = [];
     zeros.length = paddingBytes;
     this.update(zeros);

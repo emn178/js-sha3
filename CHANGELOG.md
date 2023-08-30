@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.9.0 / 2023-08-30
+### Fixed
+- cSHAKE bug. #24
+- dependencies and security issues.
+
 ## v0.8.0 / 2018-08-05
 ### Added
 - TypeScript definitions.
