@@ -25,6 +25,27 @@
           n: '',
           s: '',
           output: '7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26'
+        },
+        {
+          input: [],
+          bits: 256,
+          n: [],
+          s: [],
+          output: '7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26'
+        },
+        {
+          input: [],
+          bits: 256,
+          n: new ArrayBuffer(0),
+          s: new ArrayBuffer(0),
+          output: '7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26'
+        },
+        {
+          input: [],
+          bits: 256,
+          n: new Uint8Array([]),
+          s: new Uint8Array([]),
+          output: '7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26'
         }
       ]
     },

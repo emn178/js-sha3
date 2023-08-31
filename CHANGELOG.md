@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.9.1 / 2023-08-31
+### Fixed
+- cSHAKE empty Array bug. #24
+
 ## v0.9.0 / 2023-08-30
 ### Fixed
 - cSHAKE bug. #24
