@@ -68,8 +68,9 @@
       throw new Error(INPUT_ERROR);
     }
     if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
-      message = new Uint8Array(message);
-    } else if (!isArray(message) && !isView(message)) {
+      return [new Uint8Array(message), true];
+    }
+    if (!isArray(message) && !isView(message)) {
       throw new Error(INPUT_ERROR);
     }
     return [message, true];
