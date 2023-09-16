@@ -59,6 +59,7 @@
       }
     : ArrayBuffer.isView;
 
+  // [message: string, isString: bool]
   var formatMessage = function (message) {
     var type = typeof message;
     if (type === 'string') {
