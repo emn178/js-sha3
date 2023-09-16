@@ -62,18 +62,18 @@
   var formatMessage = function (message) {
     var type = typeof message;
     if (type === 'string') {
-      return [message, false];
+      return [message, true];
     }
     if (type !== 'object' || message === null) {
       throw new Error(INPUT_ERROR);
     }
     if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
-      return [new Uint8Array(message), true];
+      return [new Uint8Array(message), false];
     }
     if (!isArray(message) && !isView(message)) {
       throw new Error(INPUT_ERROR);
     }
-    return [message, true];
+    return [message, false];
   }
 
   var empty = function (message) {
@@ -212,7 +212,7 @@
     }
     var result = formatMessage(message);
     message = result[0];
-    var notString = result[1];
+    var isString = result && result[1];
     var blocks = this.blocks, byteCount = this.byteCount, length = message.length,
       blockCount = this.blockCount, index = 0, s = this.s, i, code;
 
@@ -224,7 +224,7 @@
           blocks[i] = 0;
         }
       }
-      if (notString) {
+      if (!isString) {
         for (i = this.start; index < length && i < byteCount; ++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
@@ -288,9 +288,9 @@
   Keccak.prototype.encodeString = function (str) {
     var result = formatMessage(str);
     str = result[0];
-    var notString = result[1];
+    var isString = result && result[1];
     var bytes = 0, length = str.length;
-    if (notString) {
+    if (!isString) {
       bytes = length;
     } else {
       for (var i = 0; i < str.length; ++i) {
