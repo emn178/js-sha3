@@ -212,7 +212,7 @@
     }
     var result = formatMessage(message);
     message = result[0];
-    var isString = result && result[1];
+    var isString = result[1];
     var blocks = this.blocks, byteCount = this.byteCount, length = message.length,
       blockCount = this.blockCount, index = 0, s = this.s, i, code;
 
@@ -224,11 +224,7 @@
           blocks[i] = 0;
         }
       }
-      if (!isString) {
-        for (i = this.start; index < length && i < byteCount; ++index) {
-          blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
-        }
-      } else {
+      if (isString) {
         for (i = this.start; index < length && i < byteCount; ++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
@@ -247,6 +243,10 @@
             blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
           }
+        }
+      } else {
+        for (i = this.start; index < length && i < byteCount; ++index) {
+          blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       }
       this.lastByteIndex = i;
