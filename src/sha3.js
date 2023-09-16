@@ -288,11 +288,9 @@
   Keccak.prototype.encodeString = function (str) {
     var result = formatMessage(str);
     str = result[0];
-    var isString = result && result[1];
+    var isString = result[1];
     var bytes = 0, length = str.length;
-    if (!isString) {
-      bytes = length;
-    } else {
+    if (isString) {
       for (var i = 0; i < str.length; ++i) {
         var code = str.charCodeAt(i);
         if (code < 0x80) {
@@ -306,6 +304,8 @@
           bytes += 4;
         }
       }
+    } else {
+      bytes = length;
     }
     bytes += this.encode(bytes * 8);
     this.update(str);
