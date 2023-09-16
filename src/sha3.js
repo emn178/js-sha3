@@ -46,37 +46,35 @@
     '256': 136
   };
 
-  if (root.JS_SHA3_NO_NODE_JS || !Array.isArray) {
-    Array.isArray = function (obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';
-    };
-  }
 
-  if (ARRAY_BUFFER && (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView)) {
-    ArrayBuffer.isView = function (obj) {
-      return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
-    };
-  }
-
-  var formatMessage = function (message) {
-    var notString, type = typeof message;
-    if (type !== 'string') {
-      if (type === 'object') {
-        if (message === null) {
-          throw new Error(INPUT_ERROR);
-        } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
-          message = new Uint8Array(message);
-        } else if (!Array.isArray(message)) {
-          if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
-            throw new Error(INPUT_ERROR);
-          }
-        }
-      } else {
-        throw new Error(INPUT_ERROR);
+  var isArray = root.JS_SHA3_NO_NODE_JS || !Array.isArray
+    ? function (obj) {
+        return Object.prototype.toString.call(obj) === '[object Array]';
       }
-      notString = true;
+    : Array.isArray;
+
+  var isView = (ARRAY_BUFFER && (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView))
+    ? function (obj) {
+        return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
+      }
+    : ArrayBuffer.isView;
+
+  // [message: string, isString: bool]
+  var formatMessage = function (message) {
+    var type = typeof message;
+    if (type === 'string') {
+      return [message, true];
     }
-    return [message, notString];
+    if (type !== 'object' || message === null) {
+      throw new Error(INPUT_ERROR);
+    }
+    if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
+      return [new Uint8Array(message), false];
+    }
+    if (!isArray(message) && !isView(message)) {
+      throw new Error(INPUT_ERROR);
+    }
+    return [message, false];
   }
 
   var empty = function (message) {
@@ -215,7 +213,7 @@
     }
     var result = formatMessage(message);
     message = result[0];
-    var notString = result[1];
+    var isString = result[1];
     var blocks = this.blocks, byteCount = this.byteCount, length = message.length,
       blockCount = this.blockCount, index = 0, s = this.s, i, code;
 
@@ -227,11 +225,7 @@
           blocks[i] = 0;
         }
       }
-      if (notString) {
-        for (i = this.start; index < length && i < byteCount; ++index) {
-          blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
-        }
-      } else {
+      if (isString) {
         for (i = this.start; index < length && i < byteCount; ++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
@@ -250,6 +244,10 @@
             blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
           }
+        }
+      } else {
+        for (i = this.start; index < length && i < byteCount; ++index) {
+          blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       }
       this.lastByteIndex = i;
@@ -291,11 +289,9 @@
   Keccak.prototype.encodeString = function (str) {
     var result = formatMessage(str);
     str = result[0];
-    var notString = result[1];
+    var isString = result[1];
     var bytes = 0, length = str.length;
-    if (notString) {
-      bytes = length;
-    } else {
+    if (isString) {
       for (var i = 0; i < str.length; ++i) {
         var code = str.charCodeAt(i);
         if (code < 0x80) {
@@ -309,6 +305,8 @@
           bytes += 4;
         }
       }
+    } else {
+      bytes = length;
     }
     bytes += this.encode(bytes * 8);
     this.update(str);
