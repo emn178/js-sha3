@@ -46,17 +46,18 @@
     '256': 136
   };
 
-  if (root.JS_SHA3_NO_NODE_JS || !Array.isArray) {
-    Array.isArray = function (obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';
-    };
-  }
 
-  if (ARRAY_BUFFER && (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView)) {
-    ArrayBuffer.isView = function (obj) {
-      return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
-    };
-  }
+  var isArray = root.JS_SHA3_NO_NODE_JS || !Array.isArray
+    ? function (obj) {
+        return Object.prototype.toString.call(obj) === '[object Array]';
+      }
+    : Array.isArray;
+
+  var isView = (ARRAY_BUFFER && (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView))
+    ? function (obj) {
+        return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
+      }
+    : ArrayBuffer.isView;
 
   var formatMessage = function (message) {
     var notString, type = typeof message;
@@ -66,8 +67,8 @@
           throw new Error(INPUT_ERROR);
         } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
           message = new Uint8Array(message);
-        } else if (!Array.isArray(message)) {
-          if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
+        } else if (!isArray(message)) {
+          if (!ARRAY_BUFFER || !isView(message)) {
             throw new Error(INPUT_ERROR);
           }
         }
