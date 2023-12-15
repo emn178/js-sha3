@@ -399,7 +399,7 @@
       }
     }
     if (extraBytes) {
-      array[i] = s[i];
+      array[j] = s[i];
       buffer = buffer.slice(0, bytes);
     }
     return buffer;
