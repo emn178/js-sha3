@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.9.3 / 2023-12-16
+### Fixed
+- Fix error in arrayBuffer when there are extra bytes #37
+- fixed output if finalized.
+
 ## v0.9.2 / 2023-09-16
 ### Fixed
 - don't modify global Array and ArrayBuffer prototypes.  #33

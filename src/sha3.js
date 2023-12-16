@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.9.2
+ * @version 0.9.3
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2023
  * @license MIT
@@ -80,6 +80,14 @@
   var empty = function (message) {
     return formatMessage(message)[0].length === 0;
   };
+
+  var cloneArray = function (array) {
+    var newArray = [];
+    for (var i = 0; i < array.length; ++i) {
+      newArray[i] = array[i];
+    }
+    return newArray;
+  }
 
   var createOutputMethod = function (bits, padding, outputType) {
     return function (message) {
@@ -360,6 +368,7 @@
           HEX_CHARS[(block >> 28) & 0x0F] + HEX_CHARS[(block >> 24) & 0x0F];
       }
       if (j % blockCount === 0) {
+        s = cloneArray(s);
         f(s);
         i = 0;
       }
@@ -395,6 +404,7 @@
         array[j] = s[i];
       }
       if (j % blockCount === 0) {
+        s = cloneArray(s);
         f(s);
       }
     }
@@ -423,6 +433,7 @@
         array[offset + 3] = (block >> 24) & 0xFF;
       }
       if (j % blockCount === 0) {
+        s = cloneArray(s);
         f(s);
       }
     }
