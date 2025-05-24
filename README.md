@@ -101,7 +101,7 @@ const {
   cshake128,
   cshake256,
   kmac128,
-  kmac25
+  kmac256
 } = require('js-sha3');
 ```
 
