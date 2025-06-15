@@ -6,5 +6,7 @@ export default {
     file: 'build/sha3.mjs',
     format: 'esm'
   },
-  plugins: [commonjs()]
+  plugins: [commonjs({
+    strictRequires: false,
+  })]
 };
