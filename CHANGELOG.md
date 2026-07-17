@@ -1,5 +1,24 @@
 # Change Log
 
+## v0.9.3 / 2023-12-16
+### Fixed
+- Fix error in arrayBuffer when there are extra bytes #37
+- fixed output if finalized.
+
+## v0.9.2 / 2023-09-16
+### Fixed
+- don't modify global Array and ArrayBuffer prototypes.  #33
+- refactor: simplify formatMessage internal logic.  #34
+
+## v0.9.1 / 2023-08-31
+### Fixed
+- cSHAKE empty Array bug. #24
+
+## v0.9.0 / 2023-08-30
+### Fixed
+- cSHAKE bug. #24
+- dependencies and security issues.
+
 ## v0.8.0 / 2018-08-05
 ### Added
 - TypeScript definitions.

@@ -1,5 +1,5 @@
 expect = require('expect.js');
-Worker = require('webworker-threads').Worker;
+Worker = require("tiny-worker");
 
 function unset() {
   delete require.cache[require.resolve('../src/sha3.js')];

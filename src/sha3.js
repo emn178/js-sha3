@@ -1,9 +1,9 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.8.0
+ * @version 0.9.3
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2015-2018
+ * @copyright Chen, Yi-Cyuan 2015-2023
  * @license MIT
  */
 /*jslint bitwise: true */
@@ -46,16 +46,47 @@
     '256': 136
   };
 
-  if (root.JS_SHA3_NO_NODE_JS || !Array.isArray) {
-    Array.isArray = function (obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';
-    };
+
+  var isArray = root.JS_SHA3_NO_NODE_JS || !Array.isArray
+    ? function (obj) {
+        return Object.prototype.toString.call(obj) === '[object Array]';
+      }
+    : Array.isArray;
+
+  var isView = (ARRAY_BUFFER && (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView))
+    ? function (obj) {
+        return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
+      }
+    : ArrayBuffer.isView;
+
+  // [message: string, isString: bool]
+  var formatMessage = function (message) {
+    var type = typeof message;
+    if (type === 'string') {
+      return [message, true];
+    }
+    if (type !== 'object' || message === null) {
+      throw new Error(INPUT_ERROR);
+    }
+    if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
+      return [new Uint8Array(message), false];
+    }
+    if (!isArray(message) && !isView(message)) {
+      throw new Error(INPUT_ERROR);
+    }
+    return [message, false];
   }
 
-  if (ARRAY_BUFFER && (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView)) {
-    ArrayBuffer.isView = function (obj) {
-      return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
-    };
+  var empty = function (message) {
+    return formatMessage(message)[0].length === 0;
+  };
+
+  var cloneArray = function (array) {
+    var newArray = [];
+    for (var i = 0; i < array.length; ++i) {
+      newArray[i] = array[i];
+    }
+    return newArray;
   }
 
   var createOutputMethod = function (bits, padding, outputType) {
@@ -116,7 +147,7 @@
     var w = CSHAKE_BYTEPAD[bits];
     var method = createCshakeOutputMethod(bits, padding, 'hex');
     method.create = function (outputBits, n, s) {
-      if (!n && !s) {
+      if (empty(n) && empty(s)) {
         return methods['shake' + bits].create(outputBits);
       } else {
         return new Keccak(bits, padding, outputBits).bytepad([n, s], w);
@@ -188,23 +219,9 @@
     if (this.finalized) {
       throw new Error(FINALIZE_ERROR);
     }
-    var notString, type = typeof message;
-    if (type !== 'string') {
-      if (type === 'object') {
-        if (message === null) {
-          throw new Error(INPUT_ERROR);
-        } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
-          message = new Uint8Array(message);
-        } else if (!Array.isArray(message)) {
-          if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
-            throw new Error(INPUT_ERROR);
-          }
-        }
-      } else {
-        throw new Error(INPUT_ERROR);
-      }
-      notString = true;
-    }
+    var result = formatMessage(message);
+    message = result[0];
+    var isString = result[1];
     var blocks = this.blocks, byteCount = this.byteCount, length = message.length,
       blockCount = this.blockCount, index = 0, s = this.s, i, code;
 
@@ -216,11 +233,7 @@
           blocks[i] = 0;
         }
       }
-      if (notString) {
-        for (i = this.start; index < length && i < byteCount; ++index) {
-          blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
-        }
-      } else {
+      if (isString) {
         for (i = this.start; index < length && i < byteCount; ++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
@@ -239,6 +252,10 @@
             blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
           }
+        }
+      } else {
+        for (i = this.start; index < length && i < byteCount; ++index) {
+          blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       }
       this.lastByteIndex = i;
@@ -278,27 +295,11 @@
   };
 
   Keccak.prototype.encodeString = function (str) {
-    var notString, type = typeof str;
-    if (type !== 'string') {
-      if (type === 'object') {
-        if (str === null) {
-          throw new Error(INPUT_ERROR);
-        } else if (ARRAY_BUFFER && str.constructor === ArrayBuffer) {
-          str = new Uint8Array(str);
-        } else if (!Array.isArray(str)) {
-          if (!ARRAY_BUFFER || !ArrayBuffer.isView(str)) {
-            throw new Error(INPUT_ERROR);
-          }
-        }
-      } else {
-        throw new Error(INPUT_ERROR);
-      }
-      notString = true;
-    }
+    var result = formatMessage(str);
+    str = result[0];
+    var isString = result[1];
     var bytes = 0, length = str.length;
-    if (notString) {
-      bytes = length;
-    } else {
+    if (isString) {
       for (var i = 0; i < str.length; ++i) {
         var code = str.charCodeAt(i);
         if (code < 0x80) {
@@ -312,6 +313,8 @@
           bytes += 4;
         }
       }
+    } else {
+      bytes = length;
     }
     bytes += this.encode(bytes * 8);
     this.update(str);
@@ -323,7 +326,7 @@
     for (var i = 0; i < strs.length; ++i) {
       bytes += this.encodeString(strs[i]);
     }
-    var paddingBytes = w - bytes % w;
+    var paddingBytes = (w - bytes % w) % w;
     var zeros = [];
     zeros.length = paddingBytes;
     this.update(zeros);
@@ -365,6 +368,7 @@
           HEX_CHARS[(block >> 28) & 0x0F] + HEX_CHARS[(block >> 24) & 0x0F];
       }
       if (j % blockCount === 0) {
+        s = cloneArray(s);
         f(s);
         i = 0;
       }
@@ -400,11 +404,12 @@
         array[j] = s[i];
       }
       if (j % blockCount === 0) {
+        s = cloneArray(s);
         f(s);
       }
     }
     if (extraBytes) {
-      array[i] = s[i];
+      array[j] = s[i];
       buffer = buffer.slice(0, bytes);
     }
     return buffer;
@@ -428,6 +433,7 @@
         array[offset + 3] = (block >> 24) & 0xFF;
       }
       if (j % blockCount === 0) {
+        s = cloneArray(s);
         f(s);
       }
     }
