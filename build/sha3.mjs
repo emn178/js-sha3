@@ -1,11 +1,15 @@
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-var sha3 = {exports: {}};
+function getDefaultExportFromCjs (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+var sha3$1 = {exports: {}};
 
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.9.3
+ * @version 0.10.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2023
  * @license MIT
@@ -659,22 +663,40 @@ var sha3 = {exports: {}};
 	    }
 	  }
 	})(); 
-} (sha3));
+} (sha3$1));
 
-var sha3Exports = sha3.exports;
+var sha3Exports = sha3$1.exports;
+var sha3 = /*@__PURE__*/getDefaultExportFromCjs(sha3Exports);
 
-var cshake_128 = sha3Exports.cshake_128;
-var cshake_256 = sha3Exports.cshake_256;
-var keccak_224 = sha3Exports.keccak_224;
-var keccak_256 = sha3Exports.keccak_256;
-var keccak_384 = sha3Exports.keccak_384;
-var keccak_512 = sha3Exports.keccak_512;
-var kmac_128 = sha3Exports.kmac_128;
-var kmac_256 = sha3Exports.kmac_256;
-var sha3_224 = sha3Exports.sha3_224;
-var sha3_256 = sha3Exports.sha3_256;
-var sha3_384 = sha3Exports.sha3_384;
-var sha3_512 = sha3Exports.sha3_512;
-var shake_128 = sha3Exports.shake_128;
-var shake_256 = sha3Exports.shake_256;
-export { cshake_128, cshake_256, keccak_224, keccak_256, keccak_384, keccak_512, kmac_128, kmac_256, sha3_224, sha3_256, sha3_384, sha3_512, shake_128, shake_256 };
+const {
+  sha3_224,
+  sha3_256,
+  sha3_384,
+  sha3_512,
+
+  keccak_224,
+  keccak_256,
+  keccak_384,
+  keccak_512,
+  keccak224,
+  keccak256,
+  keccak384,
+  keccak512,
+
+  shake_128,
+  shake_256,
+  shake128,
+  shake256,
+
+  cshake_128,
+  cshake_256,
+  cshake128,
+  cshake256,
+
+  kmac_128,
+  kmac_256,
+  kmac128,
+  kmac256
+} = sha3;
+
+export { cshake128, cshake256, cshake_128, cshake_256, sha3 as default, keccak224, keccak256, keccak384, keccak512, keccak_224, keccak_256, keccak_384, keccak_512, kmac128, kmac256, kmac_128, kmac_256, sha3_224, sha3_256, sha3_384, sha3_512, shake128, shake256, shake_128, shake_256 };

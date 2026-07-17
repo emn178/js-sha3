@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.10.0 / 2026-07-17
+### Added
+- support ESM #42, #38
+- types index.d.ts to package.json #32
+
 ## v0.9.3 / 2023-12-16
 ### Fixed
 - Fix error in arrayBuffer when there are extra bytes #37
