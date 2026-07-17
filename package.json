@@ -4,6 +4,7 @@
   "description": "A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha3.js",
   "module": "build/sha3.mjs",
+  "types": "index.d.ts",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.5",
     "expect.js": "~0.3.1",
