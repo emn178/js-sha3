@@ -9,9 +9,9 @@ var sha3$1 = {exports: {}};
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.11.0
+ * @version 0.12.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2015-2023
+ * @copyright Chen, Yi-Cyuan 2015-2026
  * @license MIT
  */
 
@@ -119,9 +119,15 @@ var sha3$1 = {exports: {}};
 	    };
 	  };
 
-	  var createKmacOutputMethod = function (bits, padding, outputType) {
+	  var createKmacOutputMethod = function (bits, padding, xof, outputType) {
 	    return function (key, message, outputBits, s) {
-	      return methods['kmac' + bits].update(key, message, outputBits, s)[outputType]();
+	      return methods[(xof ? 'kmacxof' : 'kmac') + bits].update(key, message, outputBits, s)[outputType]();
+	    };
+	  };
+
+	  var createTupleHashOutputMethod = function (bits, padding, xof, outputType) {
+	    return function (inputs, outputBits, s) {
+	      return methods[(xof ? 'tuplehashxof' : 'tuplehash') + bits].update(inputs, outputBits, s)[outputType]();
 	    };
 	  };
 
@@ -171,22 +177,18 @@ var sha3$1 = {exports: {}};
 	    return createOutputMethods(method, createCshakeOutputMethod, bits, padding);
 	  };
 
-	  var createKmacMethod = function (bits, padding) {
+	  var createKmacMethod = function (bits, padding, xof) {
 	    var w = CSHAKE_BYTEPAD[bits];
-	    var method = createKmacOutputMethod(bits, padding, 'hex');
+	    var method = createKmacOutputMethod(bits, padding, xof, 'hex');
 	    method.create = function (key, outputBits, s) {
-	      return new Kmac(bits, padding, outputBits).bytepad(['KMAC', s], w).bytepad([key], w);
+	      return new Kmac(bits, padding, outputBits, xof).bytepad(['KMAC', s], w).bytepad([key], w);
 	    };
 	    method.update = function (key, message, outputBits, s) {
 	      return method.create(key, outputBits, s).update(message);
 	    };
-	    return createOutputMethods(method, createKmacOutputMethod, bits, padding);
-	  };
-
-	  var createTupleHashOutputMethod = function (bits, padding, xof, outputType) {
-	    return function (inputs, outputBits, s) {
-	      return methods[(xof ? 'tuplehashxof' : 'tuplehash') + bits].update(inputs, outputBits, s)[outputType]();
-	    };
+	    return createOutputMethods(method, function (b, p, outputType) {
+	      return createKmacOutputMethod(b, p, xof, outputType);
+	    }, bits, padding);
 	  };
 
 	  var createTupleHashMethod = function (bits, padding, xof) {
@@ -215,7 +217,12 @@ var sha3$1 = {exports: {}};
 	    { name: 'sha3', padding: PADDING, bits: BITS, createMethod: createMethod },
 	    { name: 'shake', padding: SHAKE_PADDING, bits: SHAKE_BITS, createMethod: createShakeMethod },
 	    { name: 'cshake', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: createCshakeMethod },
-	    { name: 'kmac', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: createKmacMethod },
+	    { name: 'kmac', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
+	      return createKmacMethod(bits, padding, false);
+	    }},
+	    { name: 'kmacxof', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
+	      return createKmacMethod(bits, padding, true);
+	    }},
 	    { name: 'tuplehash', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
 	      return createTupleHashMethod(bits, padding, false);
 	    }},
@@ -496,27 +503,27 @@ var sha3$1 = {exports: {}};
 	    return array;
 	  };
 
-	  function Kmac(bits, padding, outputBits) {
+	  function Kmac(bits, padding, outputBits, xof) {
 	    Keccak.call(this, bits, padding, outputBits);
+	    this.xof = xof;
 	  }
 
 	  Kmac.prototype = new Keccak();
 
 	  Kmac.prototype.finalize = function () {
 	    if (!this.finalized) {
-	      this.encode(this.outputBits, true);
+	      this.encode(this.xof ? 0 : this.outputBits, true);
 	    }
 	    return Keccak.prototype.finalize.call(this);
 	  };
 
 	  function TupleHash(bits, padding, outputBits, xof) {
-	    Keccak.call(this, bits, padding, outputBits);
-	    this.xof = !!xof;
+	    Kmac.call(this, bits, padding, outputBits, xof);
 	    this.inputActive = false;
 	    this.inputBytesRemaining = 0;
 	  }
 
-	  TupleHash.prototype = new Keccak();
+	  TupleHash.prototype = new Kmac();
 
 	  TupleHash.prototype.getMessageByteLength = function (message) {
 	    var result = formatMessage(message);
@@ -542,9 +549,6 @@ var sha3$1 = {exports: {}};
 	  };
 
 	  TupleHash.prototype.beginInput = function (byteLength) {
-	    if (this.finalized) {
-	      throw new Error(FINALIZE_ERROR);
-	    }
 	    if (this.inputActive) {
 	      throw new Error(TUPLE_INCOMPLETE_ERROR);
 	    }
@@ -553,28 +557,15 @@ var sha3$1 = {exports: {}};
 	      throw new Error(TUPLE_BYTE_LENGTH_ERROR);
 	    }
 	    this.encode(byteLength * 8, false);
-	    if (byteLength === 0) {
-	      this.inputActive = false;
-	      this.inputBytesRemaining = 0;
-	    } else {
+	    if (byteLength !== 0) {
 	      this.inputActive = true;
 	      this.inputBytesRemaining = byteLength;
 	    }
 	    return this;
 	  };
 
-	  TupleHash.prototype.updateChunk = function (message) {
-	    if (this.finalized) {
-	      throw new Error(FINALIZE_ERROR);
-	    }
-	    if (!this.inputActive) {
-	      throw new Error(TUPLE_ACTIVE_ERROR);
-	    }
-	    var byteLength = this.getMessageByteLength(message);
-	    if (byteLength > this.inputBytesRemaining) {
-	      throw new Error(TUPLE_LENGTH_ERROR);
-	    }
-	    Keccak.prototype.update.call(this, message);
+	  TupleHash.prototype._updateChunk = function (message, byteLength) {
+	    Kmac.prototype.update.call(this, message);
 	    this.inputBytesRemaining -= byteLength;
 	    if (this.inputBytesRemaining === 0) {
 	      this.inputActive = false;
@@ -582,29 +573,28 @@ var sha3$1 = {exports: {}};
 	    return this;
 	  };
 
-	  TupleHash.prototype.update = function (message) {
-	    if (this.finalized) {
-	      throw new Error(FINALIZE_ERROR);
-	    }
-	    if (this.inputActive) {
-	      throw new Error(TUPLE_INCOMPLETE_ERROR);
+	  TupleHash.prototype.updateChunk = function (message) {
+	    if (!this.inputActive) {
+	      throw new Error(TUPLE_ACTIVE_ERROR);
 	    }
 	    var byteLength = this.getMessageByteLength(message);
-	    this.beginInput(byteLength);
-	    if (byteLength === 0) {
-	      return this;
+	    if (byteLength > this.inputBytesRemaining) {
+	      throw new Error(TUPLE_LENGTH_ERROR);
 	    }
-	    return this.updateChunk(message);
+	    return this._updateChunk(message, byteLength);
+	  };
+
+	  TupleHash.prototype.update = function (message) {
+	    var byteLength = this.getMessageByteLength(message);
+	    this.beginInput(byteLength);
+	    return this._updateChunk(message, byteLength);
 	  };
 
 	  TupleHash.prototype.finalize = function () {
 	    if (this.inputActive) {
 	      throw new Error(TUPLE_INCOMPLETE_ERROR);
 	    }
-	    if (!this.finalized) {
-	      this.encode(this.xof ? 0 : this.outputBits, true);
-	    }
-	    return Keccak.prototype.finalize.call(this);
+	    return Kmac.prototype.finalize.call(this);
 	  };
 
 	  var f = function (s) {
@@ -834,6 +824,10 @@ const {
   kmac_256,
   kmac128,
   kmac256,
+  kmacxof_128,
+  kmacxof_256,
+  kmacxof128,
+  kmacxof256,
 
   tuplehash_128,
   tuplehash_256,
@@ -845,4 +839,4 @@ const {
   tuplehashxof256
 } = sha3;
 
-export { cshake128, cshake256, cshake_128, cshake_256, sha3 as default, keccak224, keccak256, keccak384, keccak512, keccak_224, keccak_256, keccak_384, keccak_512, kmac128, kmac256, kmac_128, kmac_256, sha3_224, sha3_256, sha3_384, sha3_512, shake128, shake256, shake_128, shake_256, tuplehash128, tuplehash256, tuplehash_128, tuplehash_256, tuplehashxof128, tuplehashxof256, tuplehashxof_128, tuplehashxof_256 };
+export { cshake128, cshake256, cshake_128, cshake_256, sha3 as default, keccak224, keccak256, keccak384, keccak512, keccak_224, keccak_256, keccak_384, keccak_512, kmac128, kmac256, kmac_128, kmac_256, kmacxof128, kmacxof256, kmacxof_128, kmacxof_256, sha3_224, sha3_256, sha3_384, sha3_512, shake128, shake256, shake_128, shake_256, tuplehash128, tuplehash256, tuplehash_128, tuplehash_256, tuplehashxof128, tuplehashxof256, tuplehashxof_128, tuplehashxof_256 };

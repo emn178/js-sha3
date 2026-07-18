@@ -29,6 +29,10 @@ export const {
   kmac_256,
   kmac128,
   kmac256,
+  kmacxof_128,
+  kmacxof_256,
+  kmacxof128,
+  kmacxof256,
 
   tuplehash_128,
   tuplehash_256,

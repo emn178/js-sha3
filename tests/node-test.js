@@ -16,6 +16,8 @@ function unset() {
   shake256 = null;
   kmac128 = null;
   kmac256 = null;
+  kmacxof128 = null;
+  kmacxof256 = null;
   tuplehash128 = null;
   tuplehash256 = null;
   tuplehashxof128 = null;
@@ -45,6 +47,8 @@ function requireToGlobal() {
   cshake256 = sha3.cshake256;
   kmac128 = sha3.kmac128;
   kmac256 = sha3.kmac256;
+  kmacxof128 = sha3.kmacxof128;
+  kmacxof256 = sha3.kmacxof256;
   tuplehash128 = sha3.tuplehash128;
   tuplehash256 = sha3.tuplehash256;
   tuplehashxof128 = sha3.tuplehashxof128;
@@ -117,6 +121,8 @@ define = function (func) {
   cshake256 = sha3.cshake256;
   kmac128 = sha3.kmac128;
   kmac256 = sha3.kmac256;
+  kmacxof128 = sha3.kmacxof128;
+  kmacxof256 = sha3.kmacxof256;
   tuplehash128 = sha3.tuplehash128;
   tuplehash256 = sha3.tuplehash256;
   tuplehashxof128 = sha3.tuplehashxof128;

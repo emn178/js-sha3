@@ -203,7 +203,7 @@
       expect(array).to.eql(digest);
       expect(Array.prototype.slice.call(new Uint8Array(buffer))).to.eql(array);
       expect(function () { hash.update(t1); }).to.throwError(/finalize already called/);
-      expect(function () { hash.updateChunk(t1); }).to.throwError(/finalize already called/);
+      expect(function () { hash.updateChunk(t1); }).to.throwError(/no active tuple input/);
     });
 
     it('should require customization like KMAC', function () {

@@ -53,6 +53,8 @@ cshake128('Message to hash', 256, 'function name', 'customization');
 cshake256('Message to hash', 512, 'function name', 'customization');
 kmac128('key', 'Message to hash', 256, 'customization');
 kmac256('key', 'Message to hash', 512, 'customization');
+kmacxof128('key', 'Message to hash', 256, 'customization');
+kmacxof256('key', 'Message to hash', 512, 'customization');
 tuplehash128(['abc', 'd'], 256, 'customization');
 tuplehash256(['abc', 'd'], 512, 'customization');
 tuplehashxof128(['abc', 'd'], 256, 'customization');
@@ -129,6 +131,8 @@ const {
   cshake256,
   kmac128,
   kmac256,
+  kmacxof128,
+  kmacxof256,
   tuplehash128,
   tuplehash256,
   tuplehashxof128,
@@ -154,6 +158,8 @@ import {
   cshake256,
   kmac128,
   kmac256,
+  kmacxof128,
+  kmacxof256,
   tuplehash128,
   tuplehash256,
   tuplehashxof128,

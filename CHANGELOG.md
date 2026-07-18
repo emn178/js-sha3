@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.12.0 / 2026-07-18
+### Added
+- KMACXOF128 and KMACXOF256 (NIST SP 800-185)
+
 ## v0.11.0 / 2026-07-18
 ### Added
 - TupleHash128, TupleHash256, TupleHashXOF128, and TupleHashXOF256 (NIST SP 800-185)
