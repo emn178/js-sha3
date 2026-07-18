@@ -291,6 +291,96 @@ interface KmacHash {
   update(key: Message, message: Message, outputBits: number, customization: Message): Hasher;
 }
 
+type TupleInput = Message[];
+
+interface TupleHash extends Hasher {
+  /**
+   * Start a streaming tuple input with a known UTF-8/binary byte length.
+   *
+   * @param byteLength The byte length of the input that will follow through updateChunk().
+   */
+  beginInput(byteLength: number): TupleHash;
+
+  /**
+   * Absorb part of the active streaming tuple input.
+   *
+   * @param message The next message chunk.
+   */
+  updateChunk(message: Message): TupleHash;
+
+  /**
+   * Append one complete tuple input string.
+   * Equivalent to beginInput(byteLength) followed by updateChunk(message).
+   *
+   * @param message The input string to encode and absorb.
+   */
+  update(message: Message): TupleHash;
+}
+
+interface TupleHashMethod {
+  /**
+   * Hash a tuple and return hex string.
+   *
+   * @param inputs The tuple of input strings.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  (inputs: TupleInput, outputBits: number, customization: Message): string;
+
+  /**
+   * Hash a tuple and return hex string.
+   *
+   * @param inputs The tuple of input strings.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  hex(inputs: TupleInput, outputBits: number, customization: Message): string;
+
+  /**
+   * Hash a tuple and return ArrayBuffer.
+   *
+   * @param inputs The tuple of input strings.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  arrayBuffer(inputs: TupleInput, outputBits: number, customization: Message): ArrayBuffer;
+
+  /**
+   * Hash a tuple and return integer array.
+   *
+   * @param inputs The tuple of input strings.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  digest(inputs: TupleInput, outputBits: number, customization: Message): number[];
+
+  /**
+   * Hash a tuple and return integer array.
+   *
+   * @param inputs The tuple of input strings.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  array(inputs: TupleInput, outputBits: number, customization: Message): number[];
+
+  /**
+   * Create a TupleHash object.
+   *
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  create(outputBits: number, customization: Message): TupleHash;
+
+  /**
+   * Create a TupleHash object and absorb the given tuple inputs.
+   *
+   * @param inputs The tuple of input strings.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  update(inputs: TupleInput, outputBits: number, customization: Message): TupleHash;
+}
+
 export var sha3_512: Hash;
 export var sha3_384: Hash;
 export var sha3_256: Hash;
@@ -315,3 +405,11 @@ export var kmac_128: KmacHash;
 export var kmac_256: KmacHash;
 export var kmac128: KmacHash;
 export var kmac256: KmacHash;
+export var tuplehash_128: TupleHashMethod;
+export var tuplehash_256: TupleHashMethod;
+export var tuplehash128: TupleHashMethod;
+export var tuplehash256: TupleHashMethod;
+export var tuplehashxof_128: TupleHashMethod;
+export var tuplehashxof_256: TupleHashMethod;
+export var tuplehashxof128: TupleHashMethod;
+export var tuplehashxof256: TupleHashMethod;

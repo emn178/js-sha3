@@ -16,6 +16,10 @@ function unset() {
   shake256 = null;
   kmac128 = null;
   kmac256 = null;
+  tuplehash128 = null;
+  tuplehash256 = null;
+  tuplehashxof128 = null;
+  tuplehashxof256 = null;
   BUFFER = undefined;
   JS_SHA3_NO_WINDOW = undefined;
   JS_SHA3_NO_NODE_JS = undefined;
@@ -41,6 +45,10 @@ function requireToGlobal() {
   cshake256 = sha3.cshake256;
   kmac128 = sha3.kmac128;
   kmac256 = sha3.kmac256;
+  tuplehash128 = sha3.tuplehash128;
+  tuplehash256 = sha3.tuplehash256;
+  tuplehashxof128 = sha3.tuplehashxof128;
+  tuplehashxof256 = sha3.tuplehashxof256;
 }
 
 function runCommonJsTest() {
@@ -57,6 +65,7 @@ function runWindowTest(extra) {
     require('./test-shake.js');
     require('./test-cshake.js');
     require('./test-kmac.js');
+    require('./test-tuplehash.js');
   }
   unset();
 }
@@ -108,6 +117,10 @@ define = function (func) {
   cshake256 = sha3.cshake256;
   kmac128 = sha3.kmac128;
   kmac256 = sha3.kmac256;
+  tuplehash128 = sha3.tuplehash128;
+  tuplehash256 = sha3.tuplehash256;
+  tuplehashxof128 = sha3.tuplehashxof128;
+  tuplehashxof256 = sha3.tuplehashxof256;
   require('./test.js');
 };
 define.amd = true;

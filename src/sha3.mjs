@@ -28,7 +28,16 @@ export const {
   kmac_128,
   kmac_256,
   kmac128,
-  kmac256
+  kmac256,
+
+  tuplehash_128,
+  tuplehash_256,
+  tuplehash128,
+  tuplehash256,
+  tuplehashxof_128,
+  tuplehashxof_256,
+  tuplehashxof128,
+  tuplehashxof256
 } = sha3;
 
 export default sha3;

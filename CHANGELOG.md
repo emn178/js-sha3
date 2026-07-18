@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.11.0 / 2026-07-18
+### Added
+- TupleHash128, TupleHash256, TupleHashXOF128, and TupleHashXOF256 (NIST SP 800-185)
+
+### Fixed
+- KMAC repeated output reads after finalize
+
 ## v0.10.0 / 2026-07-17
 ### Added
 - support ESM #42, #38

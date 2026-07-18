@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/emn178/js-sha3/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha3?branch=master)  
 [![NPM](https://nodei.co/npm/js-sha3.png?stars&downloads)](https://nodei.co/npm/js-sha3/)
 
-A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.
+A simple SHA-3 / Keccak / SHAKE / cSHAKE / KMAC / TupleHash hash function for JavaScript supports UTF-8 encoding.
 
 ## Notice
 * v0.8.0+ will throw an error if try to update hash after finalize.
@@ -53,6 +53,10 @@ cshake128('Message to hash', 256, 'function name', 'customization');
 cshake256('Message to hash', 512, 'function name', 'customization');
 kmac128('key', 'Message to hash', 256, 'customization');
 kmac256('key', 'Message to hash', 512, 'customization');
+tuplehash128(['abc', 'd'], 256, 'customization');
+tuplehash256(['abc', 'd'], 512, 'customization');
+tuplehashxof128(['abc', 'd'], 256, 'customization');
+tuplehashxof256(['abc', 'd'], 512, 'customization');
 
 // Support ArrayBuffer output
 var arrayBuffer = keccak224.arrayBuffer('Message to hash');
@@ -83,6 +87,29 @@ var hash = cshake128.create(256, 'function name', 'customization');
 
 // specify kmac key, output bits and customization when creating
 var hash = kmac128.create('key', 256, 'customization');
+
+// TupleHash: a tuple contains zero or more input strings.
+// One-shot and method-level update
+tuplehash128(['abc', 'd'], 256, '');
+tuplehash128.update(['abc', 'd'], 256, '').hex();
+
+// Incremental complete inputs (each update is one tuple input string)
+tuplehash128.create(256, '')
+  .update('abc')
+  .update('d')
+  .hex();
+
+// Streaming a large input when its byte length is known in advance.
+// beginInput + updateChunk; no endInput() is needed.
+// Inputs are absorbed sequentially. TupleHash does not parallelize tuple inputs;
+// use ParallelHash for parallel hashing of one large input.
+var tupleHash = tuplehash128.create(256, '');
+tupleHash.beginInput(3);
+tupleHash.updateChunk([0x61, 0x62]);
+tupleHash.updateChunk([0x63]);
+tupleHash.beginInput(1);
+tupleHash.updateChunk([0x64]);
+tupleHash.hex();
 ```
 ### Node.js
 If you use node.js, you should require the module first:
@@ -101,7 +128,11 @@ const {
   cshake128,
   cshake256,
   kmac128,
-  kmac256
+  kmac256,
+  tuplehash128,
+  tuplehash256,
+  tuplehashxof128,
+  tuplehashxof256
 } = require('js-sha3');
 ```
 
@@ -122,7 +153,11 @@ import {
   cshake128,
   cshake256,
   kmac128,
-  kmac256
+  kmac256,
+  tuplehash128,
+  tuplehash256,
+  tuplehashxof128,
+  tuplehashxof256
 } from 'js-sha3';
 ```
 

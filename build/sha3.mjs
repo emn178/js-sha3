@@ -9,7 +9,7 @@ var sha3$1 = {exports: {}};
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.10.0
+ * @version 0.11.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2023
  * @license MIT
@@ -21,6 +21,10 @@ var sha3$1 = {exports: {}};
 
 	  var INPUT_ERROR = 'input is invalid type';
 	  var FINALIZE_ERROR = 'finalize already called';
+	  var TUPLE_ACTIVE_ERROR = 'no active tuple input';
+	  var TUPLE_INCOMPLETE_ERROR = 'tuple input is incomplete';
+	  var TUPLE_LENGTH_ERROR = 'tuple input exceeds declared length';
+	  var TUPLE_BYTE_LENGTH_ERROR = 'tuple input byte length is invalid';
 	  var WINDOW = typeof window === 'object';
 	  var root = WINDOW ? window : {};
 	  if (root.JS_SHA3_NO_WINDOW) {
@@ -179,12 +183,45 @@ var sha3$1 = {exports: {}};
 	    return createOutputMethods(method, createKmacOutputMethod, bits, padding);
 	  };
 
+	  var createTupleHashOutputMethod = function (bits, padding, xof, outputType) {
+	    return function (inputs, outputBits, s) {
+	      return methods[(xof ? 'tuplehashxof' : 'tuplehash') + bits].update(inputs, outputBits, s)[outputType]();
+	    };
+	  };
+
+	  var createTupleHashMethod = function (bits, padding, xof) {
+	    var w = CSHAKE_BYTEPAD[bits];
+	    var method = createTupleHashOutputMethod(bits, padding, xof, 'hex');
+	    method.create = function (outputBits, s) {
+	      return new TupleHash(bits, padding, outputBits, xof).bytepad(['TupleHash', s], w);
+	    };
+	    method.update = function (inputs, outputBits, s) {
+	      if (!isArray(inputs)) {
+	        throw new Error(INPUT_ERROR);
+	      }
+	      var hash = method.create(outputBits, s);
+	      for (var i = 0; i < inputs.length; ++i) {
+	        hash.update(inputs[i]);
+	      }
+	      return hash;
+	    };
+	    return createOutputMethods(method, function (b, p, outputType) {
+	      return createTupleHashOutputMethod(b, p, xof, outputType);
+	    }, bits, padding);
+	  };
+
 	  var algorithms = [
 	    { name: 'keccak', padding: KECCAK_PADDING, bits: BITS, createMethod: createMethod },
 	    { name: 'sha3', padding: PADDING, bits: BITS, createMethod: createMethod },
 	    { name: 'shake', padding: SHAKE_PADDING, bits: SHAKE_BITS, createMethod: createShakeMethod },
 	    { name: 'cshake', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: createCshakeMethod },
-	    { name: 'kmac', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: createKmacMethod }
+	    { name: 'kmac', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: createKmacMethod },
+	    { name: 'tuplehash', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
+	      return createTupleHashMethod(bits, padding, false);
+	    }},
+	    { name: 'tuplehashxof', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
+	      return createTupleHashMethod(bits, padding, true);
+	    }}
 	  ];
 
 	  var methods = {}, methodNames = [];
@@ -298,7 +335,7 @@ var sha3$1 = {exports: {}};
 	    } else {
 	      bytes.unshift(n);
 	    }
-	    this.update(bytes);
+	    Keccak.prototype.update.call(this, bytes);
 	    return bytes.length;
 	  };
 
@@ -325,7 +362,7 @@ var sha3$1 = {exports: {}};
 	      bytes = length;
 	    }
 	    bytes += this.encode(bytes * 8);
-	    this.update(str);
+	    Keccak.prototype.update.call(this, str);
 	    return bytes;
 	  };
 
@@ -337,7 +374,7 @@ var sha3$1 = {exports: {}};
 	    var paddingBytes = (w - bytes % w) % w;
 	    var zeros = [];
 	    zeros.length = paddingBytes;
-	    this.update(zeros);
+	    Keccak.prototype.update.call(this, zeros);
 	    return this;
 	  };
 
@@ -466,7 +503,107 @@ var sha3$1 = {exports: {}};
 	  Kmac.prototype = new Keccak();
 
 	  Kmac.prototype.finalize = function () {
-	    this.encode(this.outputBits, true);
+	    if (!this.finalized) {
+	      this.encode(this.outputBits, true);
+	    }
+	    return Keccak.prototype.finalize.call(this);
+	  };
+
+	  function TupleHash(bits, padding, outputBits, xof) {
+	    Keccak.call(this, bits, padding, outputBits);
+	    this.xof = !!xof;
+	    this.inputActive = false;
+	    this.inputBytesRemaining = 0;
+	  }
+
+	  TupleHash.prototype = new Keccak();
+
+	  TupleHash.prototype.getMessageByteLength = function (message) {
+	    var result = formatMessage(message);
+	    message = result[0];
+	    if (!result[1]) {
+	      return message.length;
+	    }
+	    var bytes = 0;
+	    for (var i = 0; i < message.length; ++i) {
+	      var code = message.charCodeAt(i);
+	      if (code < 0x80) {
+	        bytes += 1;
+	      } else if (code < 0x800) {
+	        bytes += 2;
+	      } else if (code < 0xd800 || code >= 0xe000) {
+	        bytes += 3;
+	      } else {
+	        ++i;
+	        bytes += 4;
+	      }
+	    }
+	    return bytes;
+	  };
+
+	  TupleHash.prototype.beginInput = function (byteLength) {
+	    if (this.finalized) {
+	      throw new Error(FINALIZE_ERROR);
+	    }
+	    if (this.inputActive) {
+	      throw new Error(TUPLE_INCOMPLETE_ERROR);
+	    }
+	    if (typeof byteLength !== 'number' || !isFinite(byteLength) || byteLength < 0 ||
+	        Math.floor(byteLength) !== byteLength || byteLength > 0x0fffffff) {
+	      throw new Error(TUPLE_BYTE_LENGTH_ERROR);
+	    }
+	    this.encode(byteLength * 8, false);
+	    if (byteLength === 0) {
+	      this.inputActive = false;
+	      this.inputBytesRemaining = 0;
+	    } else {
+	      this.inputActive = true;
+	      this.inputBytesRemaining = byteLength;
+	    }
+	    return this;
+	  };
+
+	  TupleHash.prototype.updateChunk = function (message) {
+	    if (this.finalized) {
+	      throw new Error(FINALIZE_ERROR);
+	    }
+	    if (!this.inputActive) {
+	      throw new Error(TUPLE_ACTIVE_ERROR);
+	    }
+	    var byteLength = this.getMessageByteLength(message);
+	    if (byteLength > this.inputBytesRemaining) {
+	      throw new Error(TUPLE_LENGTH_ERROR);
+	    }
+	    Keccak.prototype.update.call(this, message);
+	    this.inputBytesRemaining -= byteLength;
+	    if (this.inputBytesRemaining === 0) {
+	      this.inputActive = false;
+	    }
+	    return this;
+	  };
+
+	  TupleHash.prototype.update = function (message) {
+	    if (this.finalized) {
+	      throw new Error(FINALIZE_ERROR);
+	    }
+	    if (this.inputActive) {
+	      throw new Error(TUPLE_INCOMPLETE_ERROR);
+	    }
+	    var byteLength = this.getMessageByteLength(message);
+	    this.beginInput(byteLength);
+	    if (byteLength === 0) {
+	      return this;
+	    }
+	    return this.updateChunk(message);
+	  };
+
+	  TupleHash.prototype.finalize = function () {
+	    if (this.inputActive) {
+	      throw new Error(TUPLE_INCOMPLETE_ERROR);
+	    }
+	    if (!this.finalized) {
+	      this.encode(this.xof ? 0 : this.outputBits, true);
+	    }
 	    return Keccak.prototype.finalize.call(this);
 	  };
 
@@ -696,7 +833,16 @@ const {
   kmac_128,
   kmac_256,
   kmac128,
-  kmac256
+  kmac256,
+
+  tuplehash_128,
+  tuplehash_256,
+  tuplehash128,
+  tuplehash256,
+  tuplehashxof_128,
+  tuplehashxof_256,
+  tuplehashxof128,
+  tuplehashxof256
 } = sha3;
 
-export { cshake128, cshake256, cshake_128, cshake_256, sha3 as default, keccak224, keccak256, keccak384, keccak512, keccak_224, keccak_256, keccak_384, keccak_512, kmac128, kmac256, kmac_128, kmac_256, sha3_224, sha3_256, sha3_384, sha3_512, shake128, shake256, shake_128, shake_256 };
+export { cshake128, cshake256, cshake_128, cshake_256, sha3 as default, keccak224, keccak256, keccak384, keccak512, keccak_224, keccak_256, keccak_384, keccak_512, kmac128, kmac256, kmac_128, kmac_256, sha3_224, sha3_256, sha3_384, sha3_512, shake128, shake256, shake_128, shake_256, tuplehash128, tuplehash256, tuplehash_128, tuplehash_256, tuplehashxof128, tuplehashxof256, tuplehashxof_128, tuplehashxof_256 };

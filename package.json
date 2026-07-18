@@ -1,7 +1,7 @@
 {
   "name": "js-sha3",
-  "version": "0.10.0",
-  "description": "A simple SHA-3 / Keccak / Shake hash function for JavaScript supports UTF-8 encoding.",
+  "version": "0.11.0",
+  "description": "A simple SHA-3 / Keccak / SHAKE / cSHAKE / KMAC / TupleHash hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha3.js",
   "module": "build/sha3.mjs",
   "exports": {
@@ -44,6 +44,7 @@
     "shake",
     "cshake",
     "kmac",
+    "tuplehash",
     "hash",
     "encryption",
     "cryptography",
