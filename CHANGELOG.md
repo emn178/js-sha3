@@ -3,6 +3,14 @@
 ## v0.13.0 / 2026-08-07
 ### Added
 - ParallelHash128, ParallelHash256, ParallelHashXOF128, and ParallelHashXOF256 (NIST SP 800-185)
+- GitHub Actions CI across Node.js 18, 20, 22, and 24 against the packed npm artifact
+- GitHub Actions publish workflow on release with npm trusted publishing
+- `prepack` script to build distributions before `npm pack` / `npm publish`
+
+### Changed
+- Replace Travis CI with GitHub Actions
+- Update README badges to GitHub Actions, npm, and jsDelivr
+- Upgrade mocha and pin vulnerable transitive dependencies via npm overrides
 
 ## v0.12.0 / 2026-07-18
 ### Added
