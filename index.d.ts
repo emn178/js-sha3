@@ -417,3 +417,92 @@ export var tuplehashxof_128: TupleHashMethod;
 export var tuplehashxof_256: TupleHashMethod;
 export var tuplehashxof128: TupleHashMethod;
 export var tuplehashxof256: TupleHashMethod;
+
+interface ParallelHash extends Hasher {
+  /**
+   * Absorb message bytes into ParallelHash blocks.
+   *
+   * @param message The next message chunk.
+   */
+  update(message: Message): ParallelHash;
+}
+
+interface ParallelHashMethod {
+  /**
+   * Hash and return hex string.
+   *
+   * @param message The message you want to hash.
+   * @param blockSize The ParallelHash block size in bytes.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  (message: Message, blockSize: number, outputBits: number, customization: Message): string;
+
+  /**
+   * Hash and return hex string.
+   *
+   * @param message The message you want to hash.
+   * @param blockSize The ParallelHash block size in bytes.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  hex(message: Message, blockSize: number, outputBits: number, customization: Message): string;
+
+  /**
+   * Hash and return ArrayBuffer.
+   *
+   * @param message The message you want to hash.
+   * @param blockSize The ParallelHash block size in bytes.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  arrayBuffer(message: Message, blockSize: number, outputBits: number, customization: Message): ArrayBuffer;
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param message The message you want to hash.
+   * @param blockSize The ParallelHash block size in bytes.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  digest(message: Message, blockSize: number, outputBits: number, customization: Message): number[];
+
+  /**
+   * Hash and return integer array.
+   *
+   * @param message The message you want to hash.
+   * @param blockSize The ParallelHash block size in bytes.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  array(message: Message, blockSize: number, outputBits: number, customization: Message): number[];
+
+  /**
+   * Create a ParallelHash object.
+   *
+   * @param blockSize The ParallelHash block size in bytes.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  create(blockSize: number, outputBits: number, customization: Message): ParallelHash;
+
+  /**
+   * Create a ParallelHash object and hash message.
+   *
+   * @param message The message you want to hash.
+   * @param blockSize The ParallelHash block size in bytes.
+   * @param outputBits The length of output.
+   * @param customization The customization string.
+   */
+  update(message: Message, blockSize: number, outputBits: number, customization: Message): ParallelHash;
+}
+
+export var parallelhash_128: ParallelHashMethod;
+export var parallelhash_256: ParallelHashMethod;
+export var parallelhash128: ParallelHashMethod;
+export var parallelhash256: ParallelHashMethod;
+export var parallelhashxof_128: ParallelHashMethod;
+export var parallelhashxof_256: ParallelHashMethod;
+export var parallelhashxof128: ParallelHashMethod;
+export var parallelhashxof256: ParallelHashMethod;

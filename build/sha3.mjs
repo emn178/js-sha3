@@ -9,7 +9,7 @@ var sha3$1 = {exports: {}};
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.12.0
+ * @version 0.13.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2026
  * @license MIT
@@ -25,6 +25,7 @@ var sha3$1 = {exports: {}};
 	  var TUPLE_INCOMPLETE_ERROR = 'tuple input is incomplete';
 	  var TUPLE_LENGTH_ERROR = 'tuple input exceeds declared length';
 	  var TUPLE_BYTE_LENGTH_ERROR = 'tuple input byte length is invalid';
+	  var BLOCK_SIZE_ERROR = 'block size is invalid';
 	  var WINDOW = typeof window === 'object';
 	  var root = WINDOW ? window : {};
 	  if (root.JS_SHA3_NO_WINDOW) {
@@ -131,6 +132,12 @@ var sha3$1 = {exports: {}};
 	    };
 	  };
 
+	  var createParallelHashOutputMethod = function (bits, padding, xof, outputType) {
+	    return function (message, blockSize, outputBits, s) {
+	      return methods[(xof ? 'parallelhashxof' : 'parallelhash') + bits].update(message, blockSize, outputBits, s)[outputType]();
+	    };
+	  };
+
 	  var createOutputMethods = function (method, createMethod, bits, padding) {
 	    for (var i = 0; i < OUTPUT_TYPES.length; ++i) {
 	      var type = OUTPUT_TYPES[i];
@@ -212,6 +219,26 @@ var sha3$1 = {exports: {}};
 	    }, bits, padding);
 	  };
 
+	  var createParallelHashMethod = function (bits, padding, xof) {
+	    var w = CSHAKE_BYTEPAD[bits];
+	    var method = createParallelHashOutputMethod(bits, padding, xof, 'hex');
+	    method.create = function (blockSize, outputBits, s) {
+	      if (typeof blockSize !== 'number' || !isFinite(blockSize) || blockSize < 1 ||
+	          Math.floor(blockSize) !== blockSize || blockSize > 0x0fffffff) {
+	        throw new Error(BLOCK_SIZE_ERROR);
+	      }
+	      var hash = new ParallelHash(bits, padding, outputBits, xof, blockSize).bytepad(['ParallelHash', s], w);
+	      hash.encode(blockSize, false);
+	      return hash;
+	    };
+	    method.update = function (message, blockSize, outputBits, s) {
+	      return method.create(blockSize, outputBits, s).update(message);
+	    };
+	    return createOutputMethods(method, function (b, p, outputType) {
+	      return createParallelHashOutputMethod(b, p, xof, outputType);
+	    }, bits, padding);
+	  };
+
 	  var algorithms = [
 	    { name: 'keccak', padding: KECCAK_PADDING, bits: BITS, createMethod: createMethod },
 	    { name: 'sha3', padding: PADDING, bits: BITS, createMethod: createMethod },
@@ -228,6 +255,12 @@ var sha3$1 = {exports: {}};
 	    }},
 	    { name: 'tuplehashxof', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
 	      return createTupleHashMethod(bits, padding, true);
+	    }},
+	    { name: 'parallelhash', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
+	      return createParallelHashMethod(bits, padding, false);
+	    }},
+	    { name: 'parallelhashxof', padding: CSHAKE_PADDING, bits: SHAKE_BITS, createMethod: function (bits, padding) {
+	      return createParallelHashMethod(bits, padding, true);
 	    }}
 	  ];
 
@@ -597,6 +630,93 @@ var sha3$1 = {exports: {}};
 	    return Kmac.prototype.finalize.call(this);
 	  };
 
+	  function ParallelHash(bits, padding, outputBits, xof, blockSize) {
+	    Kmac.call(this, bits, padding, outputBits, xof);
+	    this.bits = bits;
+	    this.blockSize = blockSize;
+	    this.inner = null;
+	    this.innerBytes = 0;
+	    this.blockNumber = 0;
+	  }
+
+	  ParallelHash.prototype = new Kmac();
+
+	  ParallelHash.prototype._finishInner = function () {
+	    Kmac.prototype.update.call(this, this.inner.array());
+	    this.inner = null;
+	    this.innerBytes = 0;
+	    ++this.blockNumber;
+	  };
+
+	  ParallelHash.prototype._updateBytes = function (message) {
+	    var length = message.length;
+	    if (!length) {
+	      return;
+	    }
+
+	    var slice = message.subarray || message.slice;
+	    var blockSize = this.blockSize;
+	    var index = 0;
+	    while (index < length) {
+	      if (!this.inner) {
+	        this.inner = new Keccak(this.bits, SHAKE_PADDING, this.bits << 1);
+	      }
+	      var take = blockSize - this.innerBytes;
+	      if (length - index < take) {
+	        take = length - index;
+	      }
+	      this.inner.update(slice.call(message, index, index + take));
+	      this.innerBytes += take;
+	      index += take;
+	      if (this.innerBytes === blockSize) {
+	        this._finishInner();
+	      }
+	    }
+	  };
+
+	  ParallelHash.prototype.update = function (message) {
+	    if (this.finalized) {
+	      throw new Error(FINALIZE_ERROR);
+	    }
+	    var result = formatMessage(message);
+	    message = result[0];
+	    if (result[1]) {
+	      var bytes = [], length = message.length, index = 0, code, i;
+	      for (i = 0; i < length; ++i) {
+	        code = message.charCodeAt(i);
+	        if (code < 0x80) {
+	          bytes[index++] = code;
+	        } else if (code < 0x800) {
+	          bytes[index++] = (0xc0 | (code >>> 6));
+	          bytes[index++] = (0x80 | (code & 0x3f));
+	        } else if (code < 0xd800 || code >= 0xe000) {
+	          bytes[index++] = (0xe0 | (code >>> 12));
+	          bytes[index++] = (0x80 | ((code >>> 6) & 0x3f));
+	          bytes[index++] = (0x80 | (code & 0x3f));
+	        } else {
+	          code = 0x10000 + (((code & 0x3ff) << 10) | (message.charCodeAt(++i) & 0x3ff));
+	          bytes[index++] = (0xf0 | (code >>> 18));
+	          bytes[index++] = (0x80 | ((code >>> 12) & 0x3f));
+	          bytes[index++] = (0x80 | ((code >>> 6) & 0x3f));
+	          bytes[index++] = (0x80 | (code & 0x3f));
+	        }
+	      }
+	      message = bytes;
+	    }
+	    this._updateBytes(message);
+	    return this;
+	  };
+
+	  ParallelHash.prototype.finalize = function () {
+	    if (!this.finalized) {
+	      if (this.inner) {
+	        this._finishInner();
+	      }
+	      this.encode(this.blockNumber, true);
+	    }
+	    return Kmac.prototype.finalize.call(this);
+	  };
+
 	  var f = function (s) {
 	    var h, l, n, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9,
 	      b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17,
@@ -836,7 +956,16 @@ const {
   tuplehashxof_128,
   tuplehashxof_256,
   tuplehashxof128,
-  tuplehashxof256
+  tuplehashxof256,
+
+  parallelhash_128,
+  parallelhash_256,
+  parallelhash128,
+  parallelhash256,
+  parallelhashxof_128,
+  parallelhashxof_256,
+  parallelhashxof128,
+  parallelhashxof256
 } = sha3;
 
-export { cshake128, cshake256, cshake_128, cshake_256, sha3 as default, keccak224, keccak256, keccak384, keccak512, keccak_224, keccak_256, keccak_384, keccak_512, kmac128, kmac256, kmac_128, kmac_256, kmacxof128, kmacxof256, kmacxof_128, kmacxof_256, sha3_224, sha3_256, sha3_384, sha3_512, shake128, shake256, shake_128, shake_256, tuplehash128, tuplehash256, tuplehash_128, tuplehash_256, tuplehashxof128, tuplehashxof256, tuplehashxof_128, tuplehashxof_256 };
+export { cshake128, cshake256, cshake_128, cshake_256, sha3 as default, keccak224, keccak256, keccak384, keccak512, keccak_224, keccak_256, keccak_384, keccak_512, kmac128, kmac256, kmac_128, kmac_256, kmacxof128, kmacxof256, kmacxof_128, kmacxof_256, parallelhash128, parallelhash256, parallelhash_128, parallelhash_256, parallelhashxof128, parallelhashxof256, parallelhashxof_128, parallelhashxof_256, sha3_224, sha3_256, sha3_384, sha3_512, shake128, shake256, shake_128, shake_256, tuplehash128, tuplehash256, tuplehash_128, tuplehash_256, tuplehashxof128, tuplehashxof256, tuplehashxof_128, tuplehashxof_256 };

@@ -41,7 +41,16 @@ export const {
   tuplehashxof_128,
   tuplehashxof_256,
   tuplehashxof128,
-  tuplehashxof256
+  tuplehashxof256,
+
+  parallelhash_128,
+  parallelhash_256,
+  parallelhash128,
+  parallelhash256,
+  parallelhashxof_128,
+  parallelhashxof_256,
+  parallelhashxof128,
+  parallelhashxof256
 } = sha3;
 
 export default sha3;

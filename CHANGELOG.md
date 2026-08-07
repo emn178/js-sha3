@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.13.0 / 2026-08-07
+### Added
+- ParallelHash128, ParallelHash256, ParallelHashXOF128, and ParallelHashXOF256 (NIST SP 800-185)
+
 ## v0.12.0 / 2026-07-18
 ### Added
 - KMACXOF128 and KMACXOF256 (NIST SP 800-185)
