@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.13.0
+ * @version 0.14.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2026
  * @license MIT
@@ -417,7 +417,7 @@
     this.finalized = true;
     var blocks = this.blocks, i = this.lastByteIndex, blockCount = this.blockCount, s = this.s;
     blocks[i >> 2] |= this.padding[i & 3];
-    if (this.lastByteIndex === this.byteCount) {
+    if (this.lastByteIndex >= this.byteCount) {
       blocks[0] = blocks[blockCount];
       for (i = 1; i < blockCount + 1; ++i) {
         blocks[i] = 0;

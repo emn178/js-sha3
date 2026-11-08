@@ -1,6 +1,6 @@
 {
   "name": "js-sha3",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "main": ["src/sha3.js"],
   "ignore": [
     "samples",

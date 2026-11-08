@@ -24,6 +24,10 @@
         '35dfaf82d2ce4be79393dc90e327b4dd15b1c150d8a30f59d8d1b42ca4fc3c87f50b77da36acccf9dc76494d07fc57cfcc9470e627c38f95bce4deab311b87e0': 'aécio',
         '33ef254289f36527c93cd203ef1973aec1eff7475c23fa842c3092b0d30965d13b0805c61d0aa92c51245c56bfe26978c35c00f26eb558a043982043ee8b178c': '𠜎'
       },
+      'UTF-8 crossing block boundary': {
+        '639bc16dfb4baf0e8b32ec1c0e6ae0904a780cf68bb922f503cf96c3eded9ea096a3ae7c0f4addfbf37caf8cc2769cd10a496f5711855abf61d0286b3052e498': Array(72).join('a') + 'é',
+        '6d2a97560295a71d222a59af1b745d2d0e6bf0d776fd3c3e2073ad88a0c60e57b4eedf3f4cd26e36e967343bad190074bd2b5ed1ad2312ee68a2ef773cf94697': Array(72).join('a') + '𠜎'
+      },
       'UTF-8 more than 128 bytes': {
         'accb127bb24b0ffbb7550dc637222d2f78538a8a186c98bc5efdad685b9b396639f34148bf0b94ed470f0e9c3665dc3b4c1cb321bacd32dd317a646295e073d9': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
         '5b70eaad083f1b86fd535b6812e02f5f2876a4bd8b43aede8d62ae71bb1743ebd919dc41be56d73ba45b67b2876ff215d0575788560e7b0c92b879f8a2fc3111': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
@@ -51,6 +55,10 @@
         '70b447f1bd5ce5a4753ccf7a3697eca0315954774374bc1042aff19582ccc32d5067f7da6c2bea9d6d344e11924cbe72': 'aécio',
         '7add8d544b0a7cf188b54b1697a046f77e49d5f292e7ffe56feeed90a500b0bf026b9b68892888a1bafb9f8cb89ed874': '𠜎'
       },
+      'UTF-8 crossing block boundary': {
+        '2adacd2e5baa621c6e2b34105246d27f70432668be218b90d8c05a71e128f1c7e01cf9f622274114f31a0ac9bc874a51': Array(104).join('a') + 'é',
+        '44ae4704e24fc0b8eb245df40b822016aa9762a0e72626da760010c3b5d8e8d210c86aa6a925a990a02608ea10d3210c': Array(104).join('a') + '𠜎'
+      },
       'UTF-8 more than 128 bytes': {
         '7d0f80fe5c79a04a2a37a30a440e0cc068eb78fe6c3182246ede29645c144b5d33c44607cb2c3111ba77ffc66107f1cd': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
         'e344b95c6a961a27793eff00fa5103ef78b4180fe41c93fc60a31aff49b3b5e95a92c84fda9a6c80fa403b7df58db59f': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
@@ -69,6 +77,10 @@
         'ac5305da3d18be1aed44aa7c70ea548da243a59a5fd546f489348fd5718fb1a0': '中文',
         '65c756408eb6c35a1ffa2d7e09711bdc9f0b28716b1376223844a2b4c52b6718': 'aécio',
         'babe9afc555b0311700dfb0b5b6296d49347b3d770480baedfcdc47a4aea6e82': '𠜎'
+      },
+      'UTF-8 crossing block boundary': {
+        'be0c47012a6b606f80c1a0d1b61d07d001b210234be8dd47e6cbc094160432dd': Array(136).join('a') + 'é',
+        'a3e416e00eb9a844202cda999bde4a5af531ebe428796e4d56762d49877eb9dd': Array(136).join('a') + '𠜎'
       },
       'UTF-8 more than 128 bytes': {
         '4b2f36e4320b86e6ead0ad001e47e6d9e7fcf0044cd5a5fd65490a633c0372a4': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
@@ -89,6 +101,10 @@
         'b16bad54608dc01864a5d7510d4c19b09f3a0f39cfc4ba1e53aa952a': 'aécio',
         'f59253c41cb87e5cd953311656716cb5b64dbafc9e8155f0dd68123c': '𠜎'
       },
+      'UTF-8 crossing block boundary': {
+        'b5e1dd79fbbf42a1831f55f15eb4a945b3a40fb8e382ddffb00dd2c5': Array(144).join('a') + 'é',
+        '95ef8807f0c48a6d5209eadb4250ac0fbbf1c9a7a4b19195e200b901': Array(144).join('a') + '𠜎'
+      },
       'UTF-8 more than 128 bytes': {
         '135c13deb71fdf6fb77b52b720c43ddd6ce7467f9147a74248557114': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
         'bd05581e02445c53e05aad2014f6a3819d77a9dff918b8c6bf60bd06': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
@@ -107,6 +123,10 @@
         '2f6a1bd50562230229af34b0ccf46b8754b89d23ae2c5bf7840b4acfcef86f87395edc0a00b2bfef53bafebe3b79de2e3e01cbd8169ddbb08bde888dcc893524': '中文',
         'c452ec93e83d4795fcab62a76eed0d88f2231a995ce108ac8f130246f87c4a11cb18a2c1a688a5695906a6f863e71bbe8997c6610319ab97f12d2e5bf0afe458': 'aécio',
         '8a2d72022ce19d989dbe6a0017faccbf5dc2e22c162d1c5eb168864d32dd1a71e1b4782652c148cf6ca47b77a72c96fff682e72bdfef0566d4b7cca3c9ccc59d': '𠜎'
+      },
+      'UTF-8 crossing block boundary': {
+        '99e3f901f7b8f09cd99ed422fcdd2a999598a8ab9c32730b9d99b442242fdcd2974618735777f57b8973f329e170487eb56c0c17524bea7a720edabde7b1e020': Array(72).join('a') + 'é',
+        '0aa818b80fc628c435cb9f90975e40573e7e5f9efb7101c90c982ade2daa3ac324b235e2065af8702353d99dcec1627248e2519d246d196246f5ff1f538878a6': Array(72).join('a') + '𠜎'
       },
       'UTF-8 more than 128 bytes': {
         '6a67c28aa1946ca1be8382b861aac4aaf20052f495db9b6902d13adfa603eaba5d169f8896b86d461b2949283eb98e503c3f0640188ea7d6731526fc06568d37': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
@@ -127,6 +147,10 @@
         '08990555e131af8597687614309da4c5053ce866f348544da0a0c2c78c2cc79680ebb57cfbe238286e78ea133a037897': 'aécio',
         '2a80f59abf3111f38a35a3daa25123b495f90e9736bd300e35911d19abdd8806498c581333f198ccbbf2252b57c2925d': '𠜎'
       },
+      'UTF-8 crossing block boundary': {
+        'ca105aaf06261204de3b068a2fd2d8587ac8267417a41490e6ee8aa81453e89e8bb5cc0d1fbe9116c8b50c27dd2428d9': Array(104).join('a') + 'é',
+        '1712217829147c6acb2bb14ff6bf245e15fb28629a5b68b7aead07c48a87ab5c2bbcfc9b06d31a594d848e76247801cf': Array(104).join('a') + '𠜎'
+      },
       'UTF-8 more than 128 bytes': {
         'a3b043a2f69e4326a05d478fa4c8aa2bd7612453d775af37665a0b96ef2207cdc74c50cdba1629796a5136fe77300b05': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
         '66414c090cc3fe9c396d313cbaa100aefd335e851838b29382568b7f57357ada7c54b8fa8c17f859945bba88b2c2e332': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
@@ -146,6 +170,10 @@
         'd7d569202f04daf90432810d6163112b2695d7820da979327ebd894efb0276dc': 'aécio',
         '16a7cc7a58444cbf7e939611910ddc82e7cba65a99d3e8e08cfcda53180a2180': '𠜎'
       },
+      'UTF-8 crossing block boundary': {
+        '520699913aab3b7e02e624bdcff04e2830be50cd244a41e04bf8f22de65f90c4': Array(136).join('a') + 'é',
+        'ac7e0a188a9129385e9f8de8d975193c602b8505c4081a182d6c41a1b9b0092e': Array(136).join('a') + '𠜎'
+      },
       'UTF-8 more than 128 bytes': {
         'd1021d2d4c5c7e88098c40f422af68493b4b64c913cbd68220bf5e6127c37a88': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
         'ffabf9bba2127c4928d360c9905cb4911f0ec21b9c3b89f3b242bccc68389e36': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一（又譯雜湊演算法、摘要演算法等），主流程式語言普遍已有MD5的實作。'
@@ -164,6 +192,10 @@
         '7bc2a0b6e7e0a055a61e4f731e2944b560f41ff98967dcbf4bbf77a5': '中文',
         '66f3db76bf8cb35726cb278bac412d187c3484ab2083dc50ef5ffb55': 'aécio',
         '3bfa94845726f4cd5cf17d19b5eacac17b3694790e13a76d5c81c7c2': '𠜎'
+      },
+      'UTF-8 crossing block boundary': {
+        'bc835bf25312b764f5ac035058d7cd4f0e46fed1b207872156ada8b6': Array(144).join('a') + 'é',
+        '83ca71f6261c89d3458ceeb65f8593aa26542b33cfade266d1806769': Array(144).join('a') + '𠜎'
       },
       'UTF-8 more than 128 bytes': {
         'd59eef8f394ef7d96967bb0bde578785c033f7f0a21913d6ba41ed1b': '訊息摘要演算法第五版（英語：Message-Digest Algorithm 5，縮寫為MD5），是當前電腦領域用於確保資訊傳輸完整一致而廣泛使用的雜湊演算法之一',
