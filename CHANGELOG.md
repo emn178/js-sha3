@@ -4,6 +4,9 @@
 ### Fixed
 - Wrong digest for strings whose last UTF-8 character crosses a block boundary #62
 
+### Changed
+- Update vulnerable transitive dev dependencies (brace-expansion, js-yaml, glob, minimatch, serialize-javascript)
+
 ## v0.13.0 / 2026-08-07
 ### Added
 - ParallelHash128, ParallelHash256, ParallelHashXOF128, and ParallelHashXOF256 (NIST SP 800-185)
