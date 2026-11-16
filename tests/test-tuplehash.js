@@ -242,6 +242,15 @@
       expect(hash.hex()).to.be(expected);
     });
 
+    it('should encode unpaired surrogates as U+FFFD', function () {
+      // U+FFFD = ef bf bd
+      expect(tuplehash128(['\uD800', 'a\uD83Db'], 256, '\uDC00x')).to.be(
+        tuplehash128([[0xef, 0xbf, 0xbd], [0x61, 0xef, 0xbf, 0xbd, 0x62]], 256, [0xef, 0xbf, 0xbd, 0x78]));
+      var hash = tuplehash128.create(256, '');
+      hash.beginInput(5).updateChunk('a\uD83D').updateChunk('b'); // 1 + 3 + 1 = 5 UTF-8 bytes
+      expect(hash.hex()).to.be(tuplehash128([[0x61, 0xef, 0xbf, 0xbd, 0x62]], 256, ''));
+    });
+
     it('should reject update and beginInput after finalize', function () {
       var hash = tuplehash128.create(256, '').update([0x00]);
       hash.hex();

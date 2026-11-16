@@ -46,6 +46,13 @@
           n: new Uint8Array([]),
           s: new Uint8Array([]),
           output: '7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26'
+        },
+        {
+          input: 'a\ud83db',
+          bits: 256,
+          n: '\ud800',
+          s: '\udc00x',
+          output: 'e097e791962538e81d2d450b3f1774cffc79d67a32959daa313cfcca60a9abd8'
         }
       ]
     },
@@ -73,6 +80,13 @@
           n: '',
           s: '',
           output: '46b9dd2b0ba88d13233b3feb743eeb243fcd52ea62b81b82b50c27646ed5762fd75dc4ddd8c0f200cb05019d67b592f6fc821c49479ab48640292eacb3b7c4be'
+        },
+        {
+          input: 'a\ud83db',
+          bits: 512,
+          n: '\ud800',
+          s: '\udc00x',
+          output: '428745fb92620c2c18e5c4d17cd4adec84552210ca030e8bb30b01ee3da50cc84afecea24fe62ee72ac3c0ecce8ef1342d1eafe8bd2222ccb48c834e4a1ab882'
         }
       ]
     }

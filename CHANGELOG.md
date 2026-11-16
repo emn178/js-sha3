@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.15.0 / 2026-11-16
+### Fixed
+- Unpaired UTF-16 surrogates in string input produced wrong digests and consumed the following code unit. They are now encoded as U+FFFD, matching `TextEncoder` and Node.js `crypto` (also applies to cSHAKE/KMAC function names, customization strings, and keys, TupleHash, and ParallelHash)
+
 ## v0.14.0 / 2026-11-08
 ### Fixed
 - Wrong digest for strings whose last UTF-8 character crosses a block boundary #62

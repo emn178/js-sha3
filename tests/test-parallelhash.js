@@ -188,6 +188,15 @@
       expect(hash.array().length).to.be(32);
     });
 
+    it('should encode unpaired surrogates as U+FFFD', function () {
+      // U+FFFD = ef bf bd
+      expect(parallelhash128('a\uD83Db', 2, 256, '\uDC00x')).to.be(
+        parallelhash128([0x61, 0xef, 0xbf, 0xbd, 0x62], 2, 256, [0xef, 0xbf, 0xbd, 0x78]));
+      var hash = parallelhash128.create(2, 256, '');
+      hash.update('a\uD83D').update('\uDE00'); // surrogate pair split across updates
+      expect(hash.hex()).to.be(parallelhash128([0x61, 0xef, 0xbf, 0xbd, 0xef, 0xbf, 0xbd], 2, 256, ''));
+    });
+
     it('should keep absorbing when update is shorter than remaining block space', function () {
       var expected = parallelhash128(d1, 8, 256, '');
       var hash = parallelhash128.create(8, 256, '');

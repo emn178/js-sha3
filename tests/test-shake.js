@@ -8,6 +8,13 @@
       });
     });
 
+    context('with unpaired surrogates', function () {
+      it('should be equal', function () {
+        expect(shake128('\ud800', 256)).to.be('e222dd713a77e63b0ba5f39b311e77489f3c40fccc063ceb82c5c6ea860987c0');
+        expect(shake128('a\ud83db', 256)).to.be('b45a441a78730b4c83adef9b362a99a6a2ca5a64460727eb32d817d3de34d36e');
+      });
+    });
+
     context('with 8 output', function () {
       it('should be equal', function () {
         expect(shake128('', 8)).to.be('7f');
@@ -53,6 +60,13 @@
     context('with 512 output', function () {
       it('should be equal', function () {
         expect(shake256('', 512)).to.be('46b9dd2b0ba88d13233b3feb743eeb243fcd52ea62b81b82b50c27646ed5762fd75dc4ddd8c0f200cb05019d67b592f6fc821c49479ab48640292eacb3b7c4be');
+      });
+    });
+
+    context('with unpaired surrogates', function () {
+      it('should be equal', function () {
+        expect(shake256('\ud800', 512)).to.be('36451a2c4c562eafae4f5d1cc0f030e59722e7efcb49194fe7d9dbe41f0adc9acbed8950d7bd20c1b5354072c9bb857ab5f982ea80aa005dd5d98102f57d6862');
+        expect(shake256('a\ud83db', 512)).to.be('3859bbc4c5b31a5a173793a85ba90c9c189055adf8a12847c6051ee0890a1e8e63062acccfeedd38d053f8ad4080dd5af4356b6f62ad6b020f41b2f0bbfbd1af');
       });
     });
 
