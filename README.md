@@ -310,7 +310,7 @@ keccak224('中文');
 // f71837502ba8e10837bdd8d365adb85591895602fc552b48b7390abd
 ```
 
-It also supports byte `Array`, `Uint8Array`, `ArrayBuffer` input:
+It also supports byte `Array`, `Uint8Array`, `ArrayBuffer` and other `ArrayBuffer` views as input (their underlying bytes are hashed):
 
 Code
 ```JavaScript

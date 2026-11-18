@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.15.0
+ * @version 0.16.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2026
  * @license MIT
@@ -23,7 +23,7 @@
     WINDOW = false;
   }
   var WEB_WORKER = !WINDOW && typeof self === 'object';
-  var NODE_JS = !root.JS_SHA3_NO_NODE_JS && typeof process === 'object' && process.versions && process.versions.node;
+  var NODE_JS = !root.JS_SHA3_NO_NODE_JS && !WINDOW && typeof process === 'object' && process.versions && process.versions.node && process.type != 'renderer';
   if (NODE_JS) {
     root = global;
   } else if (WEB_WORKER) {
@@ -58,7 +58,7 @@
       }
     : Array.isArray;
 
-  var isView = (ARRAY_BUFFER && (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView))
+  var isView = !ARRAY_BUFFER ? null : (root.JS_SHA3_NO_ARRAY_BUFFER_IS_VIEW || !ArrayBuffer.isView)
     ? function (obj) {
         return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
       }
@@ -76,11 +76,15 @@
     if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
       return [new Uint8Array(message), false];
     }
-    if (!isArray(message) && !isView(message)) {
+    if (isArray(message)) {
+      return [message, false];
+    }
+    if (!ARRAY_BUFFER || !isView(message)) {
       throw new Error(INPUT_ERROR);
     }
-    return [message, false];
-  }
+    // read the underlying bytes of any view (Int8Array, DataView, Uint16Array, ...)
+    return [new Uint8Array(message.buffer, message.byteOffset, message.byteLength), false];
+  };
 
   var empty = function (message) {
     return formatMessage(message)[0].length === 0;

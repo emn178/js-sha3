@@ -1,5 +1,14 @@
 # Change Log
 
+## v0.16.0 / 2026-11-18
+### Fixed
+- Incorrect hash for `DataView` input, and for `Int8Array` with negative values.
+- Throws `ArrayBuffer is not defined` in browsers without `ArrayBuffer`.
+- Throws `global is not defined` in browsers with a `process` polyfill (e.g. BrowserFS) and Electron renderers.
+
+### Changed
+- Multi-byte typed arrays such as `Uint16Array`, `Uint32Array` and `Float32Array` are now hashed by their underlying bytes, the same as Node.js `crypto` and Web Crypto. Previously each element was treated as one byte.
+
 ## v0.15.0 / 2026-11-16
 ### Fixed
 - Unpaired UTF-16 surrogates in string input produced wrong digests and consumed the following code unit. They are now encoded as U+FFFD, matching `TextEncoder` and Node.js `crypto` (also applies to cSHAKE/KMAC function names, customization strings, and keys, TupleHash, and ParallelHash)
